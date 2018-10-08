@@ -1,5 +1,6 @@
 clc;
-clear all;close all;
+clear all;
+%close all;
 global h;
 world_size=10;
 
@@ -9,7 +10,7 @@ T=[0 -1 0 5;
    0 0 0 1];
 t=T(1:3,4);
 
-display('Exercicio 1.1)')
+fprintf('Exercicio 1.1)')
 %==== Cube Face Map 0-6 ====%
 X = [0 1 0 0 0 0; 0 1 0 0 0 0; 0 1 1 1 1 1; 0 1 1 1 1 1];
 Y = [0 0 0 0 0 1; 1 1 1 0 1 1; 1 1 1 0 1 1; 0 0 0 0 0 1];
@@ -40,31 +41,32 @@ set(h(6), 'FaceColor', 'm'); %Face(6) plane y=1
 
 a_inc=10; %Animation Increment
 a_speed=0.1; %Animation Speed
-display(' Start (Press Key)')
+fprintf('\n Start (Press Key)')
 %pause
+%==== Send Cube to Pos0 ====%
 for i=1:a_inc
     translate(t(1)/a_inc,'X')
     translate(t(2)/a_inc,'Y')
     translate(t(3)/a_inc,'Z')
     pause(a_speed)
 end
-%pause
-%==== Rodar 30º em Realação Ox World ====%
-display(' >Rot 30º Ox-World')
+pause
+%==== Rodar 30º em Realação Ox World ====% Esta mál
+fprintf('\n >Rot 30º Ox-World')
 for i=1:a_inc
     rotate(h,[0 0 1],30/a_inc)
     pause(a_speed)
 end
-%pause
+pause
 %==== Translate 3 unidades em Realação Oz Object ====%
-display(' >Trans 3 Oz-Object')
+fprintf('\n >Trans 3 Oz-Object')
 for i=1:a_inc
     translate(3/a_inc,'Z')
     pause(a_speed)
 end
-%pause
+pause
 %==== Rodar -45º em Realação a [1,-1,1] do Object inicial ====%
-display(' >Rot -45º [1,-1,1]')
+fprintf('\n >Rot -45º [1,-1,1]')
 for i=1:a_inc
     rotate(h,[1 -1 1],-45/a_inc) %Voltar a colocar na origem e multiplicar? ou pre multiplicar?
     pause(a_speed)
@@ -76,12 +78,6 @@ R=rot('X',-45);
 % Criar Matriz Homogenea Rotação 4x4 (Invertivel)
 aTb = [R [0 0 0]' 
     0 0 0 1]
-A = [0 0 0 0 0 0 0 0 -5 -5 -5 -5 -5 -5 -5 -5;
-     -2 2 2 1 1 -1 -1 -2 -2 2 2 1 1 -1 -1 -2; 
-     0 0 2 2 4 4 2 2 0 0 2 2 4 4 2 2; 
-     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1] ; 
-translacaoA = [13 9 0.5]';
-A_new = Transform(pi,0,0, translacaoA,'rad')*A;
 
 create_cubo()
 function [h,P] = create_cubo()
