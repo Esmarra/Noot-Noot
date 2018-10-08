@@ -41,7 +41,7 @@ set(h(6), 'FaceColor', 'm'); %Face(6) plane y=1
 a_inc=10; %Animation Increment
 a_speed=0.1; %Animation Speed
 display(' Start (Press Key)')
-pause
+%pause
 for i=1:a_inc
     translate(t(1)/a_inc,'X')
     translate(t(2)/a_inc,'Y')
@@ -76,7 +76,12 @@ R=rot('X',-45);
 % Criar Matriz Homogenea Rotação 4x4 (Invertivel)
 aTb = [R [0 0 0]' 
     0 0 0 1]
-
+A = [0 0 0 0 0 0 0 0 -5 -5 -5 -5 -5 -5 -5 -5;
+     -2 2 2 1 1 -1 -1 -2 -2 2 2 1 1 -1 -1 -2; 
+     0 0 2 2 4 4 2 2 0 0 2 2 4 4 2 2; 
+     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1] ; 
+translacaoA = [13 9 0.5]';
+A_new = Transform(pi,0,0, translacaoA,'rad')*A;
 
 create_cubo()
 function [h,P] = create_cubo()
