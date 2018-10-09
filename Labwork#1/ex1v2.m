@@ -5,7 +5,7 @@ a_inc=10; %Animation Increment
 a_speed=0.15; %Animation Speed
 
 %==== Create Window ====%
-world_size=10;
+world_size=15;
 axis([-world_size world_size, -world_size world_size , -world_size world_size])
 xlabel('X')
 ylabel('Y')
@@ -56,12 +56,11 @@ for i=1:a_inc
 end
 set(h2,'Visible','on')
 alpha(h2,.2); %fade
-
+%pause()
 %==== Translate 3 unidades em Realação Oz Object ====% BTC
 fprintf(' >Trans 3 Oz-Object\n')
 for i=1:a_inc
-    %                           x y z ?? esta fdd??' bug
-    C_G = C_G*Transform(0,0,0, [3/a_inc 0 0]','deg') ;
+    C_G = C_G*Transform(0,0,0, [0 0 3/a_inc]','deg') ;
     C3 = C_G*C;
     h3=create_cubo(C3);
     pause(a_speed)
@@ -73,7 +72,7 @@ alpha(h3,.6); %fade
 
 %==== Rodar -45º em Realação a [1,-1,1] do Object inicial ====% CTD bug
 fprintf(' >Rot -45º [1,-1,1] Obj0\n')
-s=5; %vector size
+s=1; %vector size
 v=plot3([t(1)-1;t(1)-1+s],[t(2)-1;t(2)-1-s],[t(3),t(3)+s],'k');
 set(v,'LineWidth',2);
 for i=1:a_inc
