@@ -1,11 +1,11 @@
 clc;
 clear all;close all;
 
-a_inc=10; %Animation Increment
+a_inc=20; %Animation Increment
 a_speed=0.15; %Animation Speed
 
 %==== Create Window ====%
-world_size=15;
+world_size=10;
 axis([-world_size world_size, -world_size world_size , -world_size world_size])
 xlabel('X')
 ylabel('Y')
@@ -29,15 +29,15 @@ h0=create_cubo(C);
 alpha(h0,.1); %fade
 
 % Dada Matriz Transform WTC
-T=[0 -1 0 5;
+WTC=[0 -1 0 5;
    0 0 -1 -2;
    1 0 0 3;
    0 0 0 1];
 % Get Vector Pos
-t=T(1:3,4);
+t=WTC(1:3,4);
 
 % Criar Cubo com Matriz Transformação WTC
-C1=T*C;
+C1=WTC*C;
 h1=create_cubo(C1);
 pause(.5)
 alpha(h1,.2); %fade
@@ -46,7 +46,7 @@ alpha(h1,.2); %fade
 fprintf(' >Rot 30º Ox-World\n')
 for i=1:a_inc
     % Alfa-Z Beta-Y Gama-X
-    C_G = Transform(0,0,i*30/a_inc, [0 0 0]','deg')*T ;
+    C_G = Transform(0,0,i*30/a_inc, [0 0 0]','deg')*WTC ;
     C2 = C_G*C;
     h2=create_cubo(C2);
     pause(a_speed)
@@ -74,14 +74,15 @@ fprintf(' >Rot -45º [1,-1,1] Obj0\n')
 s=1; %vector size
 v=plot3([t(1)-1;t(1)-1+s],[t(2)-1;t(2)-1-s],[t(3),t(3)+s],'k');
 set(v,'LineWidth',2);
-%for i=1:a_inc
-    RT45=[matriz_rot([1 -1 1]',deg2rad(-i*45/a_inc)) [0 0 0]'
+for i=1:a_inc*3 %x3 voltas
+    C_G=[matriz_rot([1 -1 1]',deg2rad(-i*360/a_inc)) [0 0 0]'
     0 0 0 1];
-    C4 = T*RT45*WTC2*C;
+    C4 = C_G*WTC2*C;
     h4=create_cubo(C4);
     pause(a_speed)
-    set(h4,'Visible','off')
-%end
+    %set(h4,'Visible','off')
+    alpha(h4,.01); %fade
+end
 set(h4,'Visible','on')
 
 function h = create_cubo(Pontos)

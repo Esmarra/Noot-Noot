@@ -9,8 +9,8 @@ function [R] = Rot_RPY(alpha, beta, gama,unit)
 		unit='rar'; %Indica q ja estamos em rad a funçao rot
 	end
 	% Matriz Rotação sobre o eixo X Y Z
-	fprintf('gama %f unit %s \n',gama,unit)
-	Rx = rot('X',gama,unit)
+	%fprintf('gama %f unit %s \n',gama,unit)
+	Rx = rot('X',gama,unit);
 	Ry = rot('Y',beta,unit);
 	Rz = rot('Z',alpha,unit);
 	
