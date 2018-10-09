@@ -1,7 +1,7 @@
 clc;
 clear all;close all;
 
-a_inc=20; %Animation Increment
+a_inc=10; %Animation Increment
 a_speed=0.15; %Animation Speed
 
 %==== Create Window ====%
@@ -27,7 +27,7 @@ C=[ 1 1 1 1 0 0 0 0
 % Desenha Cubo Original
 h0=create_cubo(C);
 alpha(h0,.1); %fade
-
+pause()
 % Dada Matriz Transform WTC
 WTC=[0 -1 0 5;
    0 0 -1 -2;
@@ -69,21 +69,37 @@ end
 set(h3,'Visible','on')
 alpha(h3,.2); %fade
 
-%==== Rodar -45º em Realação a [1,-1,1] do Object inicial ====% -->WTC3 bug
+%==== Rodar -45º em Realação a [1,-1,1] do Object inicial ====% --> WTC3
 fprintf(' >Rot -45º [1,-1,1] Obj0\n')
 s=1; %vector size
 v=plot3([t(1)-1;t(1)-1+s],[t(2)-1;t(2)-1-s],[t(3),t(3)+s],'k');
 set(v,'LineWidth',2);
-for i=1:a_inc*3 %x3 voltas
-    C_G=[matriz_rot([1 -1 1]',deg2rad(-i*360/a_inc)) [0 0 0]'
+for i=1:a_inc %x3 voltas
+    C_G=[matriz_rot([1 -1 1]',deg2rad(-i*45/a_inc)) [0 0 0]'
     0 0 0 1];
     C4 = C_G*WTC2*C;
     h4=create_cubo(C4);
     pause(a_speed)
     %set(h4,'Visible','off')
     alpha(h4,.01); %fade
+    WTC3=C_G*WTC2;
 end
 set(h4,'Visible','on')
+alpha(h4,.2); %fade
+
+%==== Rodar 90º em Realação a Oz World ====% --> WTC4
+fprintf(' >Rot 90º Oz-World\n')
+for i=1:a_inc
+    % Alfa-Z Beta-Y Gama-X
+    C_G = Transform(i*90/a_inc,0,0, [0 0 0]','deg')*WTC3 ;
+    C5 = C_G*C;
+    h5=create_cubo(C5);
+    pause(a_speed)
+   % set(h5,'Visible','off')
+    alpha(h5,.01); %fade
+    WTC1=C_G; % GUARDA MAT FINAL WTC1
+end
+set(h5,'Visible','on')
 
 function h = create_cubo(Pontos)
     X =Pontos(1,:);
