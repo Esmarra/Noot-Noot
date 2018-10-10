@@ -1,4 +1,4 @@
-function [BTA] = Transform(ATB)
+function [BTA] = InvTransform(ATB)
 	% Get Matriz Rotação
 	ARB=ATB(1:3,1:3);
 	% Get Vector de Translação
