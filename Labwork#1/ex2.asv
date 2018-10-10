@@ -41,7 +41,7 @@ M=[ 3 3 5 4 4 1 1 0 2 2 3 3 5 4 4 1 1 0 2 2
 %hB=create_AB(B);
 %hC=create_C(C);
 
-WTM=[rot('X',180,'deg') [0 8 1+5]'%rotate this 180?
+WTM=[rot('X',180,'deg') [0 8 1+5]'
     0 0 0 1];
 
 WTA=[eye(3,3) [0 2 0]'
@@ -63,24 +63,14 @@ hC1=create_C(WTC*C);
 alpha(hC1,.01); %fade
 
 inter=5;
-TC=ctraj(WTM, T,inter);
+TC=trinterp(WTM, T,inter);
 for i=1:inter
     delete(hM1)
     hM1=create_M(TC(:,:,i)*M);
-    pause(.5);
+    pause(.1);
 end
-WTM1=TC(:,:,inter); %Store Current Pos
+WTM1=
 
-T=[rot('Z',90,'deg') [0 0 5]'
-    0 0 0 1];
-TC=ctraj(WTM1, T,inter);
-for i=1:inter
-    delete(hM1)
-    delete(hA1)
-    hM1=create_M(TC(:,:,i)*M);
-    hA1=create_M(TC(:,:,i)*A);
-    pause(.5);
-end
 
 
 
