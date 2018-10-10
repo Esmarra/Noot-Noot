@@ -1,3 +1,5 @@
+% Cria Matriz Rotação com um Vector e angulo
+
 function R=matriz_rot(r, phi)
     r_x=r(1,1)/norm(r);
     r_y=r(2,1)/norm(r);
