@@ -51,10 +51,10 @@ yA=1;
 xB=4;
 yB=4;
 xC=1;
-zM=8;
+zM=5;
 
 % Alfa-Z Beta-Y Gama-X
-WTM=[Rot_RPY(0,0,0,'deg') [0 8 5]'%Rotate 180x
+WTM=[eye(3) [0 8 zM]'%Rotate 180x
     0 0 0 1];
 
 WTA=[eye(3) [0 yA 0]'
@@ -79,11 +79,13 @@ Cu=[ 1 1 1 1 0 0 0 0
 WTCu=[eye(3) [4 4 0]'
     0 0 0 1];
 %CuTW=Transformacao_Inversa(WTCu);
-%h=create_cubo(Cu);
+
+%==== Send to Start Positions
 hM1=create_M(WTM*M); 
 hA1=create_AB(WTA*A);
 hB1=create_AB(WTB*B);
 hC1=create_C(WTC*C);
+
 % %alpha(hM1,.01); %fade
 % alpha(hA1,.01); %fade
 % alpha(hB1,.01); %fade
