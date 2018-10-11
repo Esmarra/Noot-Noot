@@ -64,6 +64,7 @@ for i=1:a_inc
     h3=create_cubo(C3);
     pause(a_speed)
     set(h3,'Visible','off')
+    %delete(h3);
     WTC2=C_G; %  GUARDA MAT FINAL WTC2
 end
 set(h3,'Visible','on')
