@@ -42,32 +42,32 @@ M=[ 3 3 5 4 4 1 1 0 2 2 3 3 5 4 4 1 1 0 2 2
     1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0
     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
 
-% hM=create_M(M);
-% hA=create_AB(A);
-% hB=create_AB(B);
-% hC=create_C(C);
+hM=create_M(M);
+hA=create_AB(A);
+hB=create_AB(B);
+hC=create_C(C);
 
-yA=1;
+yA=2;
 xB=4;
 yB=4;
-xC=1;
-zM=8;
+xC=2;
+z
 
 % Alfa-Z Beta-Y Gama-X
 WTM=[Rot_RPY(0,0,0,'deg') [0 8 5]'%Rotate 180x
     0 0 0 1];
 
-WTA=[eye(3) [0 yA 0]'
+WTA=[eye(3) [0 2 0]'
     0 0 0 1];
 WTAe=[[-1 0 0
     0 -1 0
-    0 0 1] [0 yA+1.5 0]'
+    0 0 1] [0 2+1.5 0]'
     0 0 0 1];
 ATW=InvTransform(WTA);
-WTB=[rot('Z',-90,'deg') [xB yB 0]'
+WTB=[rot('Z',-90,'deg') [4 4 0]'
     0 0 0 1];
 BTW=InvTransform(WTB);
-WTC=[eye(3,3) [xC -d 0]'
+WTC=[eye(3,3) [0 -d 0]'
     0 0 0 1];
 
 T=[rot('Z',90,'deg') [1 1 0]'
@@ -80,10 +80,10 @@ WTCu=[eye(3) [4 4 0]'
     0 0 0 1];
 %CuTW=Transformacao_Inversa(WTCu);
 %h=create_cubo(Cu);
-hM1=create_M(WTM*M); 
-hA1=create_AB(WTA*A);
-hB1=create_AB(WTB*B);
-hC1=create_C(WTC*C);
+% hM1=create_M(WTM*M); 
+% hA1=create_AB(WTA*A);
+% hB1=create_AB(WTB*B);
+% hC1=create_C(WTC*C);
 % %alpha(hM1,.01); %fade
 % alpha(hA1,.01); %fade
 % alpha(hB1,.01); %fade

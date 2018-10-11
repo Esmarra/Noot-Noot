@@ -80,7 +80,7 @@ for i=1:a_inc %x3 voltas
     C4 = C_G*WTC2*C;
     h4=create_cubo(C4);
     pause(a_speed)
-    %set(h4,'Visible','off')
+    set(h4,'Visible','off')
     alpha(h4,.01); %fade
     WTC3=C_G*WTC2;
 end
@@ -95,7 +95,7 @@ for i=1:a_inc
     C5 = C_G*C;
     h5=create_cubo(C5);
     pause(a_speed)
-   % set(h5,'Visible','off')
+    set(h5,'Visible','off')
     alpha(h5,.01); %fade
     WTC1=C_G; % GUARDA MAT FINAL WTC1
 end
