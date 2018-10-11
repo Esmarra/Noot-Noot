@@ -54,7 +54,6 @@ ATW=InvTransform(WTA);
 WTB=[rot('Z',-90,'deg') [4 4 0]'
     0 0 0 1];
 BTW=InvTransform(WTB);
-BTW2=Transformacao_Inversa(WTB);
 WTC=[eye(3,3) [0 -d 0]'
     0 0 0 1];
 

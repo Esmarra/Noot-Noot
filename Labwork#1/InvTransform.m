@@ -5,6 +5,6 @@ function [BTA] = InvTransform(ATB)
 	tab=ATB(1:3,4);
 	
 	% Mat Inv = Inversa Inversa*vector
-	BTA=[ARB' ARB'*tab
+	BTA=[ARB' (-ARB)'*tab
 			0 0 0 1];
 end
