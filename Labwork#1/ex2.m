@@ -3,7 +3,7 @@ clear all;
 close all;
 
 a_inc=10; %Animation Increment
-a_speed=0.15; %Animation Speed
+a_speed=0.05; %Animation Speed
 
 %==== Create Window ====%
 world_size=10;
@@ -13,7 +13,7 @@ ylabel('Y')
 zlabel('Z')
 text(0,0,0, 'O')
 w_size=900;
-set(gcf, 'Position', [1440-w_size/2, 540-w_size/2, w_size, w_size])
+set(gcf, 'Position', [900-w_size/2, 540-w_size/2, w_size, w_size])
 view(135, 50);
 grid on
 hold on
@@ -48,13 +48,16 @@ M=[ 3 3 5 4 4 1 1 0 2 2 3 3 5 4 4 1 1 0 2 2
 % hC=create_C(C);
 
 yA=1;
-xB=4;
+xB=6;
 yB=4;
 xC=1;
+yM=8;
 zM=5;
+w=3;
+
 
 % Alfa-Z Beta-Y Gama-X
-WTM=[eye(3) [0 8 zM]'%Rotate 180x
+WTM=[eye(3) [0 yM zM]'%Rotate 180x
     0 0 0 1];
 
 WTA=[eye(3) [0 yA 0]'
@@ -81,16 +84,81 @@ WTCu=[eye(3) [4 4 0]'
 %CuTW=Transformacao_Inversa(WTCu);
 
 %==== Send to Start Positions
-hM1=create_M(WTM*M); 
+%
+%hM1=create_M(WTM*M); 
 hA1=create_AB(WTA*A);
 hB1=create_AB(WTB*B);
 hC1=create_C(WTC*C);
+
+% Alfa-Z Beta-Y Gama-X
+C_G=[eye(3) [0 0 zM]'%Rotate 180x
+    0 0 0 1];
+
+% %==== Rodar 90º em Realação a [0,0,1] do Object inicial ====%--> WM1
+fprintf(' >Rot 90º [0,0,1] Obj0\n')
+for i=1:a_inc %x3 voltas
+    WTM=[matriz_rot([0 0 1]',deg2rad(-i*90/a_inc)) [0 yM zM]'
+    0 0 0 1];
+    C1 = WTM*M;
+    h1=create_M(C1);
+    pause(a_speed)
+    set(h1,'Visible','off')
+    WTM1=WTM;
+end
+
+
+
+% %==== Translate w unidades em Realação Ox e Translate xC unidades em Realação Oy  Object ====% --> WM2
+ fprintf(' Deslocação de M para A Step 1\n')
+ for i=1:a_inc
+     WTM = WTM*Transform(0,0,0, [w/a_inc xC/a_inc 0]','deg') ;
+    C2 = WTM*M;
+    h2=create_M(C2);
+    pause(a_speed)
+    set(h2,'Visible','off')
+    WTM2=WTM; % GUARDA MAT FINAL WTC1
+end
+
+% %==== Translate zM unidades em Realação Oz Object ====% --> WM3
+ fprintf(' Deslocação de M para A Step 2\n')
+ for i=1:a_inc
+     WTM = WTM*Transform(0,0,0, [0 0 -zM/a_inc]','deg') ;
+    C3 = WTM*M;
+    h3=create_M(C3);
+    pause(a_speed)
+    set(h3,'Visible','off')
+    WTM3=WTM; % GUARDA MAT FINAL WTC1
+end
+ set(h3,'Visible','on')
+ 
+% % %==== Translate 2 unidades em Realação Oz Object ====% --> WM3
+%  fprintf(' Deslocação de M para A Step 2\n')
+%  for i=1:a_inc
+%     WTM =WTM*Transform(0,0,0, [0 0 -5/a_inc]','deg') ;
+%     WTA =WTA*Transform(0,0,0, [0 0 -5/a_inc]','deg') ;
+%     
+%     C4 = WTM*M;
+%     C5 = WTA*A;
+% 
+%     h4 =create_M(C4);
+%     h5 =create_AB(C5);
+%     pause(a_speed)
+%     set(h4,'Visible','off')
+%     set(h5,'Visible','off')
+% 
+%     WTM4=WTM; % GUARDA MAT FINAL WTC1
+%     WTA1=WTA;
+% end
+%  set(h4,'Visible','on')
+%  set(h5,'Visible','on')
+
+
 
 % %alpha(hM1,.01); %fade
 % alpha(hA1,.01); %fade
 % alpha(hB1,.01); %fade
 % alpha(hC1,.01); %fade
-% 
+ 
 % h1=create_cubo(WTM*Cu,'b');
 % h2=create_cubo(WTAe*Cu,'r');
 % h3=create_cubo(WTB*Cu,'g');
