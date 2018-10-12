@@ -58,16 +58,17 @@ w=3; %widith peças
 % Alfa-Z Beta-Y Gama-X
 WTM=[eye(3) [0 yM zM]'%Rotate 180x
     0 0 0 1];
-WTMe=[eye(3) [2 yM-1 zM]'%Rotate 180x
+WTMe=[[0 -1 0
+    1 0 0
+    0 0 1] [2 yM-1 zM]'%Rotate 180x
     0 0 0 1];
-
+MTWe=InvTransform(WTMe);
 WTA=[eye(3) [0 yA 0]'
     0 0 0 1];
 % Referencial(Eixo)
-WTAe=[[0 -1 0
-    1 0 0
-    0 0 1] [0 yA+w/2 0]'
+WTAe=[eye(3) [0 yA+w/2 0]'
     0 0 0 1];
+ATWe=InvTransform(WTAe);
 ATW=InvTransform(WTA);
 WTB=[rot('Z',-90,'deg') [xB yB 0]'
     0 0 0 1];
@@ -105,7 +106,7 @@ h2=create_cubo(WTAe*Cu,'r');
 % h3=create_cubo(WTB*Cu,'g');
 % h4=create_cubo(WTC*Cu,'k');
 % 
-TC=ctraj(WTMe, WTAe,a_inc);
+TC=ctraj(MTWe,ATWe,a_inc);
  for i=1:a_inc
      delete(hM1)
      hM1=create_M(TC(:,:,i)*M);
