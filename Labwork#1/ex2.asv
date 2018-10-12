@@ -95,113 +95,151 @@ C_G=[eye(3) [0 0 zM]'%Rotate 180x
     0 0 0 1];
 pause(2); 
 set (hM1, 'Visible','off')
-% %==== Rodar 90º em Realação a [0,0,1] do Object inicial ====%--> WM1
 
+% %==== Rodar 90º em Realação a [0,0,1] do Object inicial ====%--> WM1
 fprintf(' >Rot 90º [0,0,1] Obj0\n')
 for i=1:a_inc %x3 voltas
     WTM=[matriz_rot([0 0 1]',deg2rad(-i*90/a_inc)) [0 yM zM]'
     0 0 0 1];
-    C1 = WTM*M;
-    h1=create_M(C1);
+    h1=create_M(WTM*M);
     pause(a_speed)
     set(h1,'Visible','off')
     WTM1=WTM;
 end
 
+
 % %==== Translate w unidades em Realação Ox e Translate xC unidades em Realação Oy  Object ====% --> WM2
  fprintf(' Deslocação de M para A Step 1\n')
  for i=1:a_inc
-     WTM = WTM*Transform(0,0,0, [w/a_inc xC/a_inc 0]','deg') ;
-    C2 = WTM*M;
-    h2=create_M(C2);
+    WTM = WTM*Transform(0,0,0, [w/a_inc xC/a_inc 0]','deg') ;
+    h2=create_M(WTM*M);
     pause(a_speed)
     set(h2,'Visible','off')
     WTM2=WTM; % GUARDA MAT FINAL WTC1
 end
 
+
 % %==== Translate zM unidades em Realação Oz Object ====% --> WM3
  fprintf(' Deslocação de M para A Step 2\n')
  for i=1:a_inc
-     WTM = WTM*Transform(0,0,0, [0 0 -zM/a_inc]','deg') ;
-    C3 = WTM*M;
-    h3=create_M(C3);
+    WTM = WTM*Transform(0,0,0, [0 0 -zM/a_inc]','deg') ;
+    h3=create_M(WTM*M);
     pause(a_speed)
     set(h3,'Visible','off')
     WTM3=WTM; % GUARDA MAT FINAL WTC1
 end
- %set(h3,'Visible','on')
  set (hA1, 'Visible','off')
- 
+
+
 % %==== Translate zM unidades em Realação Oz Object ====% --> WM4 e WTA1
- fprintf(' Deslocação de M \n')
+ fprintf(' Deslocação de M e A\n')
  for i=1:a_inc
     WTM =WTM*Transform(0,0,0, [0 0 zM/a_inc]','deg') ;
     WTA =WTA*Transform(0,0,0, [0 0 zM/a_inc]','deg') ;
     
-    C4 = WTM*M;
-    C5 = WTA*A;
-
-    h4 =create_M(C4);
-    h5 =create_AB(C5);
+    h4 =create_M(WTM*M);
+    h5 =create_AB(WTA*A);
     pause(a_speed)
     set(h4,'Visible','off')
     set(h5,'Visible','off')
 
     WTM4=WTM; % GUARDA MAT FINAL WTC1
     WTA1=WTA;
-end
- %set(h4,'Visible','on')
- %set(h5,'Visible','on')
+ end
+set(h4,'Visible','on')
+set(h5,'Visible','on')
 
-% %==== Rodar 90º em Realação a [0,0,1] do Object inicial ====%--> WM1
-fprintf(' >Rot 90º [0,0,1] Obj0\n')
+fprintf(' Deslocação de M e A\n')
+ for i=1:a_inc
+     
+    WTM=WTM*Transform(0, 0, 0, [1/a_inc 0 -5/a_inc]','deg')
+      
+ end
+%set(h4,'Visible','on')
 
+
+% % %==== Rodar 180º em Realação a [0,0,1] do Object inicial ====%--> WM1
+fprintf(' >Rot 180º de M e A\n')
 for i=1:a_inc %x3 voltas
     
     %[1.955/a_inc 0 12.353/a_inc]
 %     WTM=WTM4*[matriz_rot([0 1 0]',deg2rad(i*-180/a_inc)) [0/a_inc 1/a_inc 5/a_inc]'
 %     0 0 0 1];   
-    WTA=WTA*Transform(0, 0, 180/a_inc, [0 0 0]','deg');
-    WTM=WTM*Transform(0, 0, 0, [1/a_inc 0/a_inc -5/a_inc]','deg');
-    h6=create_AB (WTA*A);
-    h7=create_M (WTA*WTM*M);
+   
+    WTM=WTM*Transform(0, 0, 0, [0 0 0]','deg')
+    WTA=WTA*Transform(0, 0, 90/a_inc, [0 0 0]','deg');
+   
+    % 1/a_inc 0/a_inc -5/a_inc
+    h4=create_AB (WTA*A);
+    h5=create_M (WTA*WTM*M);
     
-    pause(a_speed)
-    set(h6,'Visible','off')
-    set(h7,'Visible','off')
-    WTM5=WTM;
-    WTA2=WTA;
-end
-
- set(h6,'Visible','on')
- set(h7,'Visible','on')
-
- 
- 
- 
- 
- 
-  for i=1:a_inc
-    WTM =WTM*Transform(0,0,0, [0 0 zM/a_inc]','deg') ;
-    WTA =WTA*Transform(0,0,0, [0 0 zM/a_inc]','deg') ;
-    
-    C4 = WTM*M;
-    C5 = WTA*A;
-
-    h4 =create_M(C4);
-    h5 =create_AB(C5);
     pause(a_speed)
     set(h4,'Visible','off')
     set(h5,'Visible','off')
-
-    WTM4=WTM; % GUARDA MAT FINAL WTC1
-    WTA1=WTA;
+    WTM5=WTM;
+    WTA2=WTA;
 end
- %set(h4,'Visible','on')
- %set(h5,'Visible','on')
- 
- 
- 
+set(h4,'Visible','on')
+set(h5,'Visible','on')
+  
+% % %==== Rodar 90º em Realação a [0,0,1] do Object inicial ====%--> WM1
+% fprintf(' >Rot 180º de M e A\n')
+% 
+% for i=1:a_inc %x3 voltas
+%     
+%     WTA=WTA*Transform(90/a_inc, 0, 0, [0 0 0]','deg');
+%     WTM=WTM*Transform(0/a_inc, 0, 0, [0 0 0]','deg');
+%     h6=create_AB (WTA*A);
+%     h7=create_M (WTA*WTM*M);
+%     
+%     pause(a_speed)
+%     set(h6,'Visible','off')
+%     set(h7,'Visible','off')
+%     WTM5=WTM;
+%     WTA2=WTA;
+% end
+% 
+% % set(h6,'Visible','on')
+%  % set(h7,'Visible','on')
+% 
+%  
+%  
+%  
+%  % %==== Translate zM unidades em Realação Oz Object ====% --> WM4 e WTA1
+%  fprintf(' Deslocação de M e A\n')
+%   for i=1:a_inc
+%     WTM =WTM*Transform(0,0,0, [0 0 0]','deg') ;
+%     WTA =WTA*Transform(0,0,0, [-w/a_inc (-yM-1)/a_inc 0]','deg') ;
+%     
+%     h4=create_AB (WTA*A);
+%     h5=create_M (WTA*WTM*M);
+%     pause(a_speed)
+%     set(h4,'Visible','off')
+%     set(h5,'Visible','off')
+% 
+%     WTM4=WTM; % GUARDA MAT FINAL WTC1
+%     WTA1=WTA;
+%   end
+% 
+%  % %==== Translate zM unidades em Realação Oz Object ====% --> WM4 e WTA1
+%  fprintf(' Deslocação de M e A\n')
+%   for i=1:a_inc
+%     WTM =WTM*Transform(0,0,0, [0 0 0]','deg') ;
+%     WTA =WTA*Transform(0,0,0, [0 0 2/a_inc]','deg') ;
+%     
+%     h4=create_AB (WTA*A);
+%     h5=create_M (WTA*WTM*M);
+%     pause(a_speed)
+%     set(h4,'Visible','off')
+%     set(h5,'Visible','off')
+% 
+%     WTM4=WTM; % GUARDA MAT FINAL WTC1
+%     WTA1=WTA;
+% end
+%     set(h4,'Visible','on')
+%     set(h5,'Visible','on')
+%  
+%  
 
 % %alpha(hM1,.01); %fade
 % alpha(hA1,.01); %fade
