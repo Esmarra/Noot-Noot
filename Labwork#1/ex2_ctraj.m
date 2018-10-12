@@ -2,10 +2,7 @@ clc;
 clear all;
 close all;
 
-a_inc=10; %Animation Increment
-a_speed=0.15; %Animation Speed
-
-%==== Create Window ====%
+%% ==== Create Window ==== %%
 world_size=10;
 axis([-world_size world_size, -world_size world_size , -world_size world_size])
 xlabel('X')
@@ -17,13 +14,22 @@ set(gcf, 'Position', [1440-w_size/2, 540-w_size/2, w_size, w_size])
 view(135, 50);
 grid on
 hold on
-
+%% ==== Variables ==== %%
+a_inc=10; %Animation Increment
+a_speed=0.15; %Animation Speed
 hA=1;
 HB=1;
 hC=1;
 hB=1;
+yA=1;
+xB=6;
+yB=4;
+xC=1;
+yM=8;
+zM=5;
 d=1;
-
+w=3; %widith peças
+%% ==== Figures Points ==== %%
 A=[0 0 0 0 0 0 0 0 -2 -2 -2 -2 -2 -2 -2 -2
     0 0 1 1 2 2 3 3 0 0 1 1 2 2 3 3
     0 hA hA hA+HB hA+HB hA hA 0 0 hA hA hA+HB hA+HB hA hA 0
@@ -36,45 +42,35 @@ C=[ 7 5 5 2 2 0 7 5 5 2 2 0
     0 0 0 0 0 0 -2 -2 -2 -2 -2 -2
     0 hC+hB+HB+hA hC hC hC+hB+HB+hA 0 0 hC+hB+HB+hA hC hC hC+hB+HB+hA 0
     1 1 1 1 1 1 1 1 1 1 1 1];
-
 M=[ 3 3 5 4 4 1 1 0 2 2 3 3 5 4 4 1 1 0 2 2
     1 0 0 -1-d -1 -1 -1-d 0 0 1 1 0 0 -1-d -1 -1 -1-d 0 0 1
     1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0
     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
-
 % hM=create_M(M);
 % hA=create_AB(A);
 % hB=create_AB(B);
 % hC=create_C(C);
+%% ==== Matriz Pos Inicial ==== %%
+WTM=[eye(3) [0 yM zM]'%Pos Inicial M
+    0 0 0 1];
+WTA=[eye(3) [0 yA 0]'%Pos Inicial A
+    0 0 0 1];
+WTB=[rot('Z',-90,'deg') [xB yB 0]' %Pos Inicial B
+    0 0 0 1];
+WTC=[eye(3,3) [xC -d 0]' %Pos Inicial C
+    0 0 0 1];
+%% ==== Eixos ==== %%
+WTMe=[rot('Z',-90,'deg') [2 yM-d zM]'%Rotate x90
+    0 0 0 1];
 
-yA=1;
-xB=6;
-yB=4;
-xC=1;
-yM=8;
-zM=5;
-w=3; %widith peças
-
-% Alfa-Z Beta-Y Gama-X
-WTM=[eye(3) [0 yM zM]'%Rotate 180x
+WTAe=[rot('Z',270,'deg') [0 yA+w/2 0]'
     0 0 0 1];
-WTMe=[[0 -1 0
-    1 0 0
-    0 0 1] [2 yM-1 zM]'%Rotate 180x
-    0 0 0 1];
-MTWe=InvTransform(WTMe);
-WTA=[eye(3) [0 yA 0]'
-    0 0 0 1];
-% Referencial(Eixo)
-WTAe=[eye(3) [0 yA+w/2 0]'
-    0 0 0 1];
+%%
 ATWe=InvTransform(WTAe);
 ATW=InvTransform(WTA);
-WTB=[rot('Z',-90,'deg') [xB yB 0]'
-    0 0 0 1];
+
 BTW=InvTransform(WTB);
-WTC=[eye(3,3) [xC -d 0]'
-    0 0 0 1];
+MTWe=InvTransform(WTMe);
 
 T=[rot('Z',90,'deg') [1 1 0]'
     0 0 0 1];
@@ -86,7 +82,7 @@ WTCu=[eye(3) [4 4 0]'
     0 0 0 1];
 %CuTW=Transformacao_Inversa(WTCu);
 
-%==== Send to Start Positions
+%% ==== Send to Start Positions ==== %%
 hM1=create_M(WTM*M); 
 hA1=create_AB(WTA*A);
 hB1=create_AB(WTB*B);
@@ -96,20 +92,23 @@ hC1=create_C(WTC*C);
 alpha(hA1,.01); %fade
 alpha(hB1,.01); %fade
 alpha(hC1,.01); %fade
-
+%%
 
 % h1=create_cubo(WTM*Cu,'b');
 %==== Cria Cubo no origem do Ref Obj ====%
-h1=create_cubo(WTMe*Cu,'b');
+create_cubo(Cu);
+h1=create_cubo(WTMe*Cu);
 %create_eixo([0,0,0],2);
-h2=create_cubo(WTAe*Cu,'r');
+h2=create_cubo(WTAe*Cu);
 % h3=create_cubo(WTB*Cu,'g');
 % h4=create_cubo(WTC*Cu,'k');
 % 
-TC=ctraj(MTWe,ATWe,a_inc);
+pause
+TC=ctraj(WTMe,WTAe,a_inc);
  for i=1:a_inc
      delete(hM1)
      hM1=create_M(TC(:,:,i)*M);
+     create_cubo(TC(:,:,i)*Cu);
      pause(a_speed);
  end
 % WTM1=TC(:,:,a_inc); %Store Current Pos
@@ -127,17 +126,17 @@ TC=ctraj(MTWe,ATWe,a_inc);
 
 
 
-function h = create_cubo(Pontos,color)
+function h = create_cubo(Pontos)
     X =Pontos(1,:);
 	Y =Pontos(2,:);
 	Z =Pontos(3,:);
-    [l c]=size(Pontos);
-    h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),color); % Front(x=1)
-    h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),color); % Back(x=0)
-    h(3)=fill3([X(1),X(2),X(6),X(5)],[Y(1),Y(2),Y(6),Y(5)],[Z(1),Z(2),Z(6),Z(5)],color); % Bottom(z=0)
-    h(4)=fill3([X(2),X(6),X(7),X(3)],[Y(2),Y(6),Y(7),Y(3)],[Z(2),Z(6),Z(7),Z(3)],color); % Side1(y=1)
-    h(5)=fill3([X(4),X(3),X(7),X(8)],[Y(4),Y(3),Y(7),Y(8)],[Z(4),Z(3),Z(7),Z(8)],color); % Top(z=1)
-    h(6)=fill3([X(1),X(4),X(8),X(5)],[Y(1),Y(4),Y(8),Y(5)],[Z(1),Z(4),Z(8),Z(5)],color); % Side2(y=0)
+    [~,c]=size(Pontos);
+    %h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),color); % Front(x=1)
+    h(1)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'G'); % Back(x=0)
+    h(2)=fill3([X(1),X(2),X(6),X(5)],[Y(1),Y(2),Y(6),Y(5)],[Z(1),Z(2),Z(6),Z(5)],'B'); % Bottom(z=0)
+    %h(4)=fill3([X(2),X(6),X(7),X(3)],[Y(2),Y(6),Y(7),Y(3)],[Z(2),Z(6),Z(7),Z(3)],color); % Side1(y=1)
+    %h(5)=fill3([X(4),X(3),X(7),X(8)],[Y(4),Y(3),Y(7),Y(8)],[Z(4),Z(3),Z(7),Z(8)],color); % Top(z=1)
+    h(3)=fill3([X(1),X(4),X(8),X(5)],[Y(1),Y(4),Y(8),Y(5)],[Z(1),Z(4),Z(8),Z(5)],'R'); % Side2(y=0)
     alpha(h,.1); %fade
     
 end
