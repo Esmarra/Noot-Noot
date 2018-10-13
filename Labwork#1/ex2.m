@@ -55,9 +55,8 @@ xB=6;
 yB=4;
 xC=1;
 yM=8;
-zM=5;
+zM=5;% só pode ser >= do que 4
 w=3;
-
 
 % Alfa-Z Beta-Y Gama-X
 WTM=[eye(3) [0 yM zM]'%Rotate 180x
@@ -72,15 +71,13 @@ WTB=[rot('Z',-90,'deg') [xB yB 0]'
 WTC=[eye(3,3) [xC -d 0]'
     0 0 0 1];
 
-
 %==== Send to Start Positions
 hM1=create_M(WTM*M); 
 hA1=create_AB(WTA*A);
 hB1=create_AB(WTB*B);
 hC1=create_C(WTC*C);
 
-
-pause(2);
+pause(1);
 delete(hM1);   %Apaga a posição incial do Manipulo
 %set (hM1, 'Visible','off')
 
@@ -98,13 +95,13 @@ end
 % %==== Translate w unidades em Realação Ox e Translate xC unidades em Realação Oy  Object ====% 
  fprintf(' Deslocação do Manipulo em Y para o objecto A \n')
  for i=1:a_inc
-    WTM = WTM*Transform(0,0,0, [w/a_inc xC/a_inc 0]','deg') ;
+    WTM = WTM*Transform(0,0,0, [(yM-yA-4)/a_inc 1/a_inc 0]','deg') ;
     h2=create_M(WTM*M);
     pause(a_speed)
     delete(h2);
-    %set(h2,'Visible','off')
+%   set(h2,'Visible','off')
  end
-
+ 
 % %==== Translate zM unidades em Realação Oz Object ====% 
  fprintf(' Deslocação do Manipulo em Z para o objecto A \n')
  for i=1:a_inc
@@ -118,7 +115,7 @@ end
  delete(hA1);%apaga a posição inicial do objecto A
 %set (hA1,'Visible','off')
 
-WTM =WTM*Transform(0,0,0, [1 0 0]','deg') ;%define a posição do manipulo antes da rotação
+WTM =WTM*Transform(0,0,0, [yA 0 0]','deg') ;%define a posição do manipulo antes da rotação
 
 fprintf('\n \n 2 Objectos\n\n')
 
@@ -164,7 +161,7 @@ end
 % %==== Translate w unidades em Realação Ox Object & Translate yM unidades em Realação Ox Object ====%
  fprintf(' Deslocação do Manipulo e do objecto A em X e Y\n')
   for i=1:a_inc
-    WTA =WTA*Transform(0,0,0, [-w/a_inc (-yM-1)/a_inc 0]','deg') ;
+    WTA =WTA*Transform(0,0,0, [-(yB-yA)/a_inc -(xB+w)/a_inc 0]','deg') ;
     h10=create_AB (WTA*A);
     h11=create_M (WTA*WTM*M);
     pause(a_speed)
@@ -175,9 +172,9 @@ end
   end
 
  % %==== Translate zM unidades em Realação Oz Object ====% 
- fprintf(' Deslocação do Manipulo e do objecto A em Z para encaixar no objecto B\n')
+fprintf(' Deslocação do Manipulo e do objecto A em Z para encaixar no objecto B\n')
  for i=1:a_inc
-    WTA =WTA*Transform(0,0,0, [0 0 (zM-3)/a_inc]','deg') ;
+    WTA =WTA*Transform(0,0,0, [0 0 (zM-hB-HB-hA)/a_inc]','deg') ;
     h12=create_AB (WTA*A);
     h13=create_M (WTA*WTM*M);
     pause(a_speed)
@@ -201,7 +198,7 @@ end
  % %==== Translate yB unidades em Realação Oy Object ====% 
  fprintf(' Deslocação do Manipulo em Y \n')
  for i=1:a_inc
-    WTM =WTM*Transform(0,0, 0, [0 -yB/a_inc 0]','deg') ;
+    WTM =WTM*Transform(0,0, 0, [0 -4/a_inc 0]','deg') ;
     h16=create_M (WTA*WTM*M);
     pause(a_speed)
     delete(h16);
@@ -227,7 +224,7 @@ for i=1:a_inc
     delete(h18);
 %   set(h18,'Visible','off')
  end    
- 
+
  fprintf('\n \n 3 Objectos\n\n')
  
 % %==== Translate zM-4 unidades em Realação Oz Object ====% 
@@ -237,8 +234,8 @@ for i=1:a_inc
     delete(hB1); %apaga a posição anterior de B
 %   set(h12,'Visible','off')
 %   set (hB1, 'Visible','off')
-    WTA =WTA*Transform(0,0,0, [0 0 -(zM-4)/a_inc]','deg') ;
-    WTB =WTB*Transform(0,0,0, [0 0 (zM-4)/a_inc]','deg') ;
+    WTA =WTA*Transform(0,0,0, [0 (xB-xC-2)/a_inc -(hC)/a_inc]','deg') ;
+    WTB =WTB*Transform(0,0,0, [0 -(xB-xC-2)/a_inc (hC)/a_inc]','deg') ;
     h19=create_AB (WTA*A);
     h20=create_AB (WTB*B);
     h21=create_M (WTA*WTM*M);
@@ -250,29 +247,12 @@ for i=1:a_inc
 %   set(h20,'Visible','off')
 %   set(h21,'Visible','off')
  end
-  
- % %==== Translate xB/2 unidades em Realação Ox Object ====% 
- fprintf(' Deslocação do Manipulo e dos objectos  A e B em x \n')
+ 
+% %==== Translate yB+w-2*d unidades em Realação Oy Object ====%
+fprintf(' Deslocação do Manipulo e dos objectos  A e B em y\n')
  for i=1:a_inc
-    WTA =WTA*Transform(0,0,0, [0 (xB/2)/a_inc 0]','deg') ;
-    WTB =WTB*Transform(0,0,0, [0 -(xB/2)/a_inc 0]','deg') ;
-    h19=create_AB (WTA*A);
-    h20=create_AB (WTB*B);
-    h21=create_M (WTA*WTM*M);
-    pause(a_speed)
-    delete(h19);
-    delete(h20); 
-    delete(h21);
-%   set(h19,'Visible','off')
-%   set(h20,'Visible','off')
-%   set(h21,'Visible','off')
- end
-
- % %==== Translate yB+w-2*d unidades em Realação Oy Object ====% 
- fprintf(' Deslocação do Manipulo e dos objectos  A e B em y\n')
- for i=1:a_inc
-    WTA =WTA*Transform(0,0,0, [(yB+w-2*d)/a_inc 0 0]','deg') ;
-    WTB =WTB*Transform(0,0,0, [(yB+w-2*d)/a_inc 0 0]','deg') ;
+    WTA =WTA*Transform(0,0,0, [(yB+2)/a_inc 0 0]','deg') ;
+    WTB =WTB*Transform(0,0,0, [(yB+2)/a_inc 0 0]','deg') ;
     h19=create_AB (WTA*A);
     h20=create_AB (WTB*B);
     h21=create_M (WTA*WTM*M);
@@ -292,10 +272,10 @@ function h = create_AB(Pontos)
 	Z =Pontos(3,:);
     [l, c]=size(Pontos);
     h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),'r'); % Front(x=1)
-     h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'w'); % Back(x=0)
-     h(3)=fill3([X(1),X(c/2),X(c),X(c/2+1)],[Y(1),Y(c/2),Y(c),Y(c/2+1)],[Z(1),Z(c/2),Z(c),Z(c/2+1)],'y'); % Bottom(z=0)
-     h(4)=fill3([X(c/2),X(c/2-1),X(c-1),X(c)],[Y(c/2),Y(c/2-1),Y(c-1),Y(c)],[Z(c/2),Z(c/2-1),Z(c-1),Z(c)],'g'); % Side1(y=1)
-     h(5)=fill3([X(c/2-1),X(c/2-2),X(c-2),X(c-1)],[Y(c/2-1),Y(c/2-2),Y(c-2),Y(c-1)],[Z(c/2-1),Z(c/2-2),Z(c-2),Z(c-1)],'b'); % Top(z=1)
+    h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'w'); % Back(x=0)
+    h(3)=fill3([X(1),X(c/2),X(c),X(c/2+1)],[Y(1),Y(c/2),Y(c),Y(c/2+1)],[Z(1),Z(c/2),Z(c),Z(c/2+1)],'y'); % Bottom(z=0)
+    h(4)=fill3([X(c/2),X(c/2-1),X(c-1),X(c)],[Y(c/2),Y(c/2-1),Y(c-1),Y(c)],[Z(c/2),Z(c/2-1),Z(c-1),Z(c)],'g'); % Side1(y=1)
+    h(5)=fill3([X(c/2-1),X(c/2-2),X(c-2),X(c-1)],[Y(c/2-1),Y(c/2-2),Y(c-2),Y(c-1)],[Z(c/2-1),Z(c/2-2),Z(c-2),Z(c-1)],'b'); % Top(z=1)
     h(6)=fill3([X(c/2-2),X(c/4+1),X(c-3),X(c-2)],[Y(c/2-2),Y(c/4+1),Y(c-3),Y(c-2)],[Z(c/2-2),Z(c/4+1),Z(c-3),Z(c-2)],'g'); % Top(z=1)
     h(7)=fill3([X(c/4+1),X(c/4),X(c-4),X(c-3)],[Y(c/4+1),Y(c/4),Y(c-4),Y(c-3)],[Z(c/4+1),Z(c/4),Z(c-4),Z(c-3)],'b'); % Top(z=1)
     h(8)=fill3([X(c/4),X(3),X(c/2+3),X(c-4)],[Y(c/4),Y(3),Y(c/2+3),Y(c-4)],[Z(c/4),Z(3),Z(c/2+3),Z(c-4)],'m'); % Top(z=1)
