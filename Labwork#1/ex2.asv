@@ -43,7 +43,7 @@ C=[ 7 5 5 2 2 0 7 5 5 2 2 0
     0 hC+hB+HB+hA hC hC hC+hB+HB+hA 0 0 hC+hB+HB+hA hC hC hC+hB+HB+hA 0
     1 1 1 1 1 1 1 1 1 1 1 1];
 
-%%% ==== Object M Points ==== %%
+%% ==== Object M Points ==== %%
 M=[ 3 3 5 4 4 1 1 0 2 2 3 3 5 4 4 1 1 0 2 2
     1 0 0 -1-d -1 -1 -1-d 0 0 1 1 0 0 -1-d -1 -1 -1-d 0 0 1
     1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0
@@ -60,7 +60,7 @@ w=3;
 %% ==== Matrizes WTM ==== %%
 
 % Alfa-Z Beta-Y Gama-X
-WTM=[eye(3) [0 yM zM]'%Rotate 180x
+WTM=[eye(3) [0 yM zM]'
     0 0 0 1];
 
 WTA=[eye(3) [0 yA 0]'
@@ -93,7 +93,7 @@ for i=1:a_inc
     %set(h1,'Visible','off')
 end
 
-% %==== Translate w unidades em Realação Ox e Translate xC unidades em Realação Oy  Object ====% 
+% %==== Translate yM-yA-4 unidades em Realação Ox e Translate 1 unidades em Realação Oy  Object ====% 
  fprintf(' Deslocação do Manipulo em Y para o objecto A \n')
  for i=1:a_inc
     WTM = WTM*Transform(0,0,0, [(yM-yA-4)/a_inc 1/a_inc 0]','deg') ;
@@ -159,7 +159,7 @@ for i=1:a_inc
 %   set(h9,'Visible','off')
 end
 
-% %==== Translate w unidades em Realação Ox Object & Translate yM unidades em Realação Ox Object ====%
+% %==== Translate yB-yA unidades em Realação Ox Object & Translate xB+w unidades em Realação Ox Object ====%
  fprintf(' Deslocação do Manipulo e do objecto A em X e Y\n')
   for i=1:a_inc
     WTA =WTA*Transform(0,0,0, [-(yB-yA)/a_inc -(xB+w)/a_inc 0]','deg') ;
@@ -172,7 +172,7 @@ end
 %   set(h11,'Visible','off')
   end
 
- % %==== Translate zM unidades em Realação Oz Object ====% 
+ % %==== Translate zM-hB-HB-hA unidades em Realação Oz Object ====% 
 fprintf(' Deslocação do Manipulo e do objecto A em Z para encaixar no objecto B\n')
  for i=1:a_inc
     WTA =WTA*Transform(0,0,0, [0 0 (zM-hB-HB-hA)/a_inc]','deg') ;
@@ -196,7 +196,7 @@ fprintf(' Deslocação do Manipulo e do objecto A em Z para encaixar no objecto B\
 %   set(h15,'Visible','off')
  end
  
- % %==== Translate yB unidades em Realação Oy Object ====% 
+ % %==== Translate 4 unidades em Realação Oy Object ====% 
  fprintf(' Deslocação do Manipulo em Y \n')
  for i=1:a_inc
     WTM =WTM*Transform(0,0, 0, [0 -4/a_inc 0]','deg') ;
@@ -225,16 +225,14 @@ for i=1:a_inc
     delete(h18);
 %   set(h18,'Visible','off')
  end    
-
+ %% ==== Deslocamento de M e A e B ==== %%
  fprintf('\n \n 3 Objectos\n\n')
  
-% %==== Translate zM-4 unidades em Realação Oz Object ====% 
+% %==== Translate xB-xC-2 unidades em Realação Ox Object & Translate hc unidades em Realação Oz Object ====% 
  fprintf(' Deslocação do Manipulo e dos objectos  A e B em z\n')
  for i=1:a_inc
     delete(h12); %apaga a posição anterior de A
     delete(hB1); %apaga a posição anterior de B
-%   set(h12,'Visible','off')
-%   set (hB1, 'Visible','off')
     WTA =WTA*Transform(0,0,0, [0 (xB-xC-2)/a_inc -(hC)/a_inc]','deg') ;
     WTB =WTB*Transform(0,0,0, [0 -(xB-xC-2)/a_inc (hC)/a_inc]','deg') ;
     h19=create_AB (WTA*A);
@@ -249,7 +247,7 @@ for i=1:a_inc
 %   set(h21,'Visible','off')
  end
  
-% %==== Translate yB+w-2*d unidades em Realação Oy Object ====%
+% %==== Translate yB+2 unidades em Realação Oy Object ====%
 fprintf(' Deslocação do Manipulo e dos objectos  A e B em y\n')
  for i=1:a_inc
     WTA =WTA*Transform(0,0,0, [(yB+2)/a_inc 0 0]','deg') ;
@@ -267,41 +265,41 @@ fprintf(' Deslocação do Manipulo e dos objectos  A e B em y\n')
     set(h21,'Visible','on')
 
 %% ==== Function to Create Figure A e B ==== %%
-function h = create_AB(Pontos)
-    X =Pontos(1,:);
-	Y =Pontos(2,:);
-	Z =Pontos(3,:);
-    [l, c]=size(Pontos);
-    h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),'r'); % Front(x=1)
-    h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'w'); % Back(x=0)
-    h(3)=fill3([X(1),X(c/2),X(c),X(c/2+1)],[Y(1),Y(c/2),Y(c),Y(c/2+1)],[Z(1),Z(c/2),Z(c),Z(c/2+1)],'y'); % Bottom(z=0)
-    h(4)=fill3([X(c/2),X(c/2-1),X(c-1),X(c)],[Y(c/2),Y(c/2-1),Y(c-1),Y(c)],[Z(c/2),Z(c/2-1),Z(c-1),Z(c)],'g'); % Side1(y=1)
-    h(5)=fill3([X(c/2-1),X(c/2-2),X(c-2),X(c-1)],[Y(c/2-1),Y(c/2-2),Y(c-2),Y(c-1)],[Z(c/2-1),Z(c/2-2),Z(c-2),Z(c-1)],'b'); % Top(z=1)
-    h(6)=fill3([X(c/2-2),X(c/4+1),X(c-3),X(c-2)],[Y(c/2-2),Y(c/4+1),Y(c-3),Y(c-2)],[Z(c/2-2),Z(c/4+1),Z(c-3),Z(c-2)],'g'); % Top(z=1)
-    h(7)=fill3([X(c/4+1),X(c/4),X(c-4),X(c-3)],[Y(c/4+1),Y(c/4),Y(c-4),Y(c-3)],[Z(c/4+1),Z(c/4),Z(c-4),Z(c-3)],'b'); % Top(z=1)
-    h(8)=fill3([X(c/4),X(3),X(c/2+3),X(c-4)],[Y(c/4),Y(3),Y(c/2+3),Y(c-4)],[Z(c/4),Z(3),Z(c/2+3),Z(c-4)],'m'); % Top(z=1)
-    h(9)=fill3([X(2),X(3),X(c/2+3),X(c/2+2)],[Y(2),Y(3),Y(c/2+3),Y(c/2+2)],[Z(2),Z(3),Z(c/2+3),Z(c/2+2)],'b'); % Top(z=1)
-    h(10)=fill3([X(1),X(2),X(c/2+2),X(c/2+1)],[Y(1),Y(2),Y(c/2+2),Y(c/2+1)],[Z(1),Z(2),Z(c/2+2),Z(c/2+1)],'m'); % Top(z=1)
-end
+% function h = create_AB(Pontos)
+%     X =Pontos(1,:);
+% 	Y =Pontos(2,:);
+% 	Z =Pontos(3,:);
+%     [~, c]=size(Pontos);
+%     h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),'r'); % Front(x=1)
+%     h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'w'); % Back(x=0)
+%     h(3)=fill3([X(1),X(c/2),X(c),X(c/2+1)],[Y(1),Y(c/2),Y(c),Y(c/2+1)],[Z(1),Z(c/2),Z(c),Z(c/2+1)],'y'); % Bottom(z=0)
+%     h(4)=fill3([X(c/2),X(c/2-1),X(c-1),X(c)],[Y(c/2),Y(c/2-1),Y(c-1),Y(c)],[Z(c/2),Z(c/2-1),Z(c-1),Z(c)],'g'); % Side1(y=1)
+%     h(5)=fill3([X(c/2-1),X(c/2-2),X(c-2),X(c-1)],[Y(c/2-1),Y(c/2-2),Y(c-2),Y(c-1)],[Z(c/2-1),Z(c/2-2),Z(c-2),Z(c-1)],'b'); % Top(z=1)
+%     h(6)=fill3([X(c/2-2),X(c/4+1),X(c-3),X(c-2)],[Y(c/2-2),Y(c/4+1),Y(c-3),Y(c-2)],[Z(c/2-2),Z(c/4+1),Z(c-3),Z(c-2)],'g'); % Top(z=1)
+%     h(7)=fill3([X(c/4+1),X(c/4),X(c-4),X(c-3)],[Y(c/4+1),Y(c/4),Y(c-4),Y(c-3)],[Z(c/4+1),Z(c/4),Z(c-4),Z(c-3)],'b'); % Top(z=1)
+%     h(8)=fill3([X(c/4),X(3),X(c/2+3),X(c-4)],[Y(c/4),Y(3),Y(c/2+3),Y(c-4)],[Z(c/4),Z(3),Z(c/2+3),Z(c-4)],'m'); % Top(z=1)
+%     h(9)=fill3([X(2),X(3),X(c/2+3),X(c/2+2)],[Y(2),Y(3),Y(c/2+3),Y(c/2+2)],[Z(2),Z(3),Z(c/2+3),Z(c/2+2)],'b'); % Top(z=1)
+%     h(10)=fill3([X(1),X(2),X(c/2+2),X(c/2+1)],[Y(1),Y(2),Y(c/2+2),Y(c/2+1)],[Z(1),Z(2),Z(c/2+2),Z(c/2+1)],'m'); % Top(z=1)
+% end
 %% ==== Function to Create Figure M ==== %%
-function h = create_M(Pontos)
-    X =Pontos(1,:);
-	Y =Pontos(2,:);
-	Z =Pontos(3,:);
-    [l, c]=size(Pontos);
-    h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),'r'); % Front(x=1)
-    h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'w'); % Back(x=0)
-    h(3)=fill3([X(1),X(c/2),X(c),X(c/2+1)],[Y(1),Y(c/2),Y(c),Y(c/2+1)],[Z(1),Z(c/2),Z(c),Z(c/2+1)],'y'); % Bottom(z=0)
-    h(4)=fill3([X(c/2),X(c/2-1),X(c-1),X(c)],[Y(c/2),Y(c/2-1),Y(c-1),Y(c)],[Z(c/2),Z(c/2-1),Z(c-1),Z(c)],'g'); % Side1(y=1)
-    h(5)=fill3([X(c/2-1),X(c/2-2),X(c-2),X(c-1)],[Y(c/2-1),Y(c/2-2),Y(c-2),Y(c-1)],[Z(c/2-1),Z(c/2-2),Z(c-2),Z(c-1)],'b'); % Top(z=1)
-    h(6)=fill3([X(c/4),X(c/4-1),X(3*c/4-1), X(3*c/4)],[Y(c/4),Y(c/4-1),Y(3*c/4-1), Y(3*c/4)],[Z(c/4),Z(c/4-1),Z(3*c/4-1), Z(3*c/4)],'m'); 
-    h(7)=fill3([X(c/4),X(c/4+1),X(3*c/4+1), X(3*c/4)],[Y(c/4),Y(c/4+1),Y(3*c/4+1), Y(3*c/4)],[Z(c/4),Z(c/4+1),Z(3*c/4+1), Z(3*c/4)],'y');
-    h(8)=fill3([X(c/4+1),X(c/4+2),X(3*c/4+2), X(3*c/4+1)],[Y(c/4+1),Y(c/4+2),Y(3*c/4+2), Y(3*c/4+1)],[Z(c/4+1),Z(c/4+2),Z(3*c/4+2), Z(3*c/4+1)],'m');
-    h(9)=fill3([X(7),X(8),X(18), X(17)],[Y(7),Y(8),Y(18),Y(17)],[Z(7),Z(8),Z(18),Z(17)],'g');
-    h(10)=fill3([X(c/4-2),X(c/4-1),X(c-(c/4)-1),X(c-(c/4)-2)],[Y(c/4-2),Y(c/4-1),Y(c-(c/4)-1),Y(c-(c/4)-2)],[Z(c/4-2),Z(c/4-1),Z(c-(c/4)-1),Z(c-(c/4)-2)],'g'); % Top(z=1)
-    h(11)=fill3([X(2),X(3),X(c/2+3),X(c/2+2)],[Y(2),Y(3),Y(c/2+3),Y(c/2+2)],[Z(2),Z(3),Z(c/2+3),Z(c/2+2)],'b'); % Top(z=1)
-    h(12)=fill3([X(1),X(2),X(c/2+2),X(c/2+1)],[Y(1),Y(2),Y(c/2+2),Y(c/2+1)],[Z(1),Z(2),Z(c/2+2),Z(c/2+1)],'m'); % Top(z=1)
-end
+% function h = create_M(Pontos)
+%     X =Pontos(1,:);
+% 	Y =Pontos(2,:);
+% 	Z =Pontos(3,:);
+%     [~,c]=size(Pontos);
+%     h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),'r'); % Front(x=1)
+%     h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'w'); % Back(x=0)
+%     h(3)=fill3([X(1),X(c/2),X(c),X(c/2+1)],[Y(1),Y(c/2),Y(c),Y(c/2+1)],[Z(1),Z(c/2),Z(c),Z(c/2+1)],'y'); % Bottom(z=0)
+%     h(4)=fill3([X(c/2),X(c/2-1),X(c-1),X(c)],[Y(c/2),Y(c/2-1),Y(c-1),Y(c)],[Z(c/2),Z(c/2-1),Z(c-1),Z(c)],'g'); % Side1(y=1)
+%     h(5)=fill3([X(c/2-1),X(c/2-2),X(c-2),X(c-1)],[Y(c/2-1),Y(c/2-2),Y(c-2),Y(c-1)],[Z(c/2-1),Z(c/2-2),Z(c-2),Z(c-1)],'b'); % Top(z=1)
+%     h(6)=fill3([X(c/4),X(c/4-1),X(3*c/4-1), X(3*c/4)],[Y(c/4),Y(c/4-1),Y(3*c/4-1), Y(3*c/4)],[Z(c/4),Z(c/4-1),Z(3*c/4-1), Z(3*c/4)],'m'); 
+%     h(7)=fill3([X(c/4),X(c/4+1),X(3*c/4+1), X(3*c/4)],[Y(c/4),Y(c/4+1),Y(3*c/4+1), Y(3*c/4)],[Z(c/4),Z(c/4+1),Z(3*c/4+1), Z(3*c/4)],'y');
+%     h(8)=fill3([X(c/4+1),X(c/4+2),X(3*c/4+2), X(3*c/4+1)],[Y(c/4+1),Y(c/4+2),Y(3*c/4+2), Y(3*c/4+1)],[Z(c/4+1),Z(c/4+2),Z(3*c/4+2), Z(3*c/4+1)],'m');
+%     h(9)=fill3([X(7),X(8),X(18), X(17)],[Y(7),Y(8),Y(18),Y(17)],[Z(7),Z(8),Z(18),Z(17)],'g');
+%     h(10)=fill3([X(c/4-2),X(c/4-1),X(c-(c/4)-1),X(c-(c/4)-2)],[Y(c/4-2),Y(c/4-1),Y(c-(c/4)-1),Y(c-(c/4)-2)],[Z(c/4-2),Z(c/4-1),Z(c-(c/4)-1),Z(c-(c/4)-2)],'g'); % Top(z=1)
+%     h(11)=fill3([X(2),X(3),X(c/2+3),X(c/2+2)],[Y(2),Y(3),Y(c/2+3),Y(c/2+2)],[Z(2),Z(3),Z(c/2+3),Z(c/2+2)],'b'); % Top(z=1)
+%     h(12)=fill3([X(1),X(2),X(c/2+2),X(c/2+1)],[Y(1),Y(2),Y(c/2+2),Y(c/2+1)],[Z(1),Z(2),Z(c/2+2),Z(c/2+1)],'m'); % Top(z=1)
+% end
 
 %% ==== Function to Create Figure C ==== %%
 function h = create_C(Pontos)

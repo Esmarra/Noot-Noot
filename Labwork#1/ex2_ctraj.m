@@ -1,6 +1,4 @@
-clc;
-clear all;
-close all;
+clc;clear all;close all;
 
 %% ==== Create Window ==== %%
 world_size=20;
@@ -30,10 +28,14 @@ zM=5;
 d=.5;
 w=3; %widith peças
 %% ==== Figures Points ==== %%
+% A=[0 0 0 0 0 0 0 0 -2 -2 -2 -2 -2 -2 -2 -2
+%     0 0 1 1 2 2 3 3 0 0 1 1 2 2 3 3
+%     0 hA hA hA+HB hA+HB hA hA 0 0 hA hA hA+HB hA+HB hA hA 0
+%     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
 A=[0 0 0 0 0 0 0 0 -2 -2 -2 -2 -2 -2 -2 -2
-    0 0 1 1 2 2 3 3 0 0 1 1 2 2 3 3
-    0 hA hA hA+HB hA+HB hA hA 0 0 hA hA hA+HB hA+HB hA hA 0
-    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
+    -w/2 -w/2 -0.5 -0.5 0.5 0.5 w/2 w/2 -w/2 -w/2 -0.5 -0.5 0.5 0.5 w/2 w/2
+    0 hA hA HB+hA HB+hA hA hA 0 0 hA hA HB+hA HB+hA hA hA 0
+    ones(1,16)];
 B=[0 0 0 0 0 0 0 0 -2 -2 -2 -2 -2 -2 -2 -2
     0 0 1 1 2 2 3 3 0 0 1 1 2 2 3 3
     0 hB+HB hB+HB hB hB hB+HB hB+HB 0 0 hB+HB hB+HB hB hB hB+HB hB+HB 0
@@ -42,23 +44,30 @@ C=[ 7 5 5 2 2 0 7 5 5 2 2 0
     0 0 0 0 0 0 -2 -2 -2 -2 -2 -2
     0 hC+hB+HB+hA hC hC hC+hB+HB+hA 0 0 hC+hB+HB+hA hC hC hC+hB+HB+hA 0
     1 1 1 1 1 1 1 1 1 1 1 1];
-M=[ 3 3 5 4 4 1 1 0 2 2 3 3 5 4 4 1 1 0 2 2
-    1 0 0 -1-d -1 -1 -1-d 0 0 1 1 0 0 -1-d -1 -1 -1-d 0 0 1
+% M=[ 3 3 5 4 4 1 1 0 2 2 3 3 5 4 4 1 1 0 2 2
+%     1 0 0 -1-d -1 -1 -1-d 0 0 1 1 0 0 -1-d -1 -1 -1-d 0 0 1
+%     1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0
+%     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
+M=[ -(hC+1) -hC -hC d 0 0 d -hC -hC -(hC+1) -(hC+1) -hC -hC d 0 0 d -hC -hC -(hC+1)
+    -.5 -.5 -(w/2+1) -w/2 -w/2 w/2 w/2 w/2+1 0.5 0.5 -.5 -.5 -(w/2+1) -w/2 -w/2 w/2 w/2 w/2+1 0.5 0.5
     1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0
-    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
+    ones(1,20)];
 % Cubo ex1 (HELP EIXOS) can be removed
 Cu=[ 1 1 1 1 0 0 0 0
     0 1 1 0 0 1 1 0
     0 0 1 1 0 0 1 1
     1 1 1 1 1 1 1 1];
-% hM=create_M(M);
-% hA=create_AB(A);
+%hM=create_M(M);
+%hA=create_AB(A);
 % hB=create_AB(B);
 %hC=create_C(C);
+
 %% ==== Matriz Pos Inicial ==== %%
-WTM=[eye(3) [0 yM zM]'%Pos Inicial M
+WTM=[rot('Z',-90,'deg') [0 yM zM]'%Pos Inicial M
     0 0 0 1];
-WTA=[eye(3) [0 yA 0]'%Pos Inicial A
+% WTA=[eye(3) [0 yA 0]'%Pos Inicial A
+%     0 0 0 1];
+WTA=[eye(3) [0 yA+w/2 0]'%Pos Inicial A
     0 0 0 1];
 WTB=[rot('Z',-90,'deg') [xB yB 0]' %Pos Inicial B
     0 0 0 1];
@@ -87,6 +96,7 @@ hC=create_C(WTC*C);
 alpha(hA,.01); %fade
 alpha(hB,.01); %fade
 alpha(hC,.01); %fade
+pause();
 %% ==== Cria Cubo no origem do Ref Obj(Eixos) ==== %%
 %create_cubo(Cu);
 h1=create_cubo(WTM*Cu);
@@ -94,65 +104,65 @@ h2=create_cubo(WTA*Cu);
 h3=create_cubo(WTB*Cu);
 h4=create_cubo(WTC*Cu);
 %% ==== Transforms ==== %%
-%% Gripper --> A %%
-% Move M -a units Oy (a=-((yM-1)-(yA+w/2)))
-WTM1=WTM*Transform(0, 0, 0, [0,-((yM-1)-(yA+w/2)),0]','deg');
-delete(hM);
-hM=create_M(WTM1*M);
-
-pause(.5)
-% Rotate and Move ObM Ox Oy Oz Position to Match ObjA
-WTM2=WTM1*Transform(-90, 0, 0, [+1,w/2,-zM]','deg');
-delete(hM);
-hM=create_M(WTM2*M);
-
-pause(0.5)
-%% Gripper And A --> B%%
-% Move M and A Oz
-WTM3=WTM2;
-WTA1=WTA;
-for i=1:a_inc
-    WTM3=WTM3*Transform(0, 0, 0, [0,0,zM/a_inc]','deg');
-    WTA1=WTA1*Transform(0, 0, 0, [0,0,zM/a_inc]','deg');
-    delete(hM);
-    delete(hA);
-    hM=create_M(WTM3*M);
-    hA=create_AB(WTA1*A);
-    pause(a_speed)
-end
-
-% Rotate and Move M and A
-WTM4=WTM3;
-WTA2=WTA1;
-for i=1:a_inc
-    WTM4=Transform(-90, 0, 0, [1,w+1,0]','deg'); %+1?
-    WTA2=WTA1*Transform(90, 0, 0, [0,0,0]','deg');
-    delete(hM);
-    delete(hA);
-    hM=create_M(WTA2*WTM4*M);
-    hA=create_AB(WTA2*A);
-    pause(a_speed)
-end
-pause
-% Move M and A
-WTM5=WTM4;
-WTA3=WTA2;
-for i=1:a_inc
-    WTM5=WTM5*Transform(0, 0, 0, [0,0,zM/5]','deg');
-    delete(hM);
-    hM=create_M(WTM5*M);
-    pause(a_speed)
-end
+% %% Gripper --> A %%
+% % Move M -a units Oy (a=-((yM-1)-(yA+w/2)))
+% WTM1=WTM*Transform(0, 0, 0, [0,-((yM-1)-(yA+w/2)),0]','deg');
+% delete(hM);
+% hM=create_M(WTM1*M);
+% 
+% pause(.5)
+% % Rotate and Move ObM Ox Oy Oz Position to Match ObjA
+% WTM2=WTM1*Transform(-90, 0, 0, [+1,w/2,-zM]','deg');
+% delete(hM);
+% hM=create_M(WTM2*M);
+% 
+% pause(0.5)
+% %% Gripper And A --> B%%
+% % Move M and A Oz
+% WTM3=WTM2;
+% WTA1=WTA;
+% for i=1:a_inc
+%     WTM3=WTM3*Transform(0, 0, 0, [0,0,zM/a_inc]','deg');
+%     WTA1=WTA1*Transform(0, 0, 0, [0,0,zM/a_inc]','deg');
+%     delete(hM);
+%     delete(hA);
+%     hM=create_M(WTM3*M);
+%     hA=create_AB(WTA1*A);
+%     pause(a_speed)
+% end
+% 
+% % Rotate and Move M and A
+% WTM4=WTM3;
+% WTA2=WTA1;
+% for i=1:a_inc
+%     WTM4=Transform(-90, 0, 0, [1,w+1,0]','deg'); %\+1?
+%     WTA2=WTA1*Transform(90, 0, 0, [0,0,0]','deg');
+%     delete(hM);
+%     delete(hA);
+%     hM=create_M(WTA2*WTM4*M);
+%     hA=create_AB(WTA2*A);
+%     pause(a_speed)
+% end
+% 
+% % Move M and A
+% WTM5=WTM4;
+% WTA3=WTA2;
+% for i=1:a_inc
+%     WTM5=WTM5*Transform(0, 0, 0, [0,0,zM/5]','deg');
+%     delete(hM);
+%     hM=create_M(WTM5*M);
+%     pause(a_speed)
+% end
 %% ==== CTRAJ ==== %%
 
-% TC=ctraj(WTMe,WTAe,a_inc);
-%  for i=1:a_inc
-%      delete(hM1)
-%      hM1=create_M(TC(:,:,i)*M);
-%      create_cubo(TC(:,:,i)*Cu);
-%      pause(a_speed);
-%  end
-% WTM1=TC(:,:,a_inc); %Store Current Pos
+TC=ctraj(WTM,WTA,a_inc);
+ for i=1:a_inc
+     delete(hM)
+     hM=create_M(TC(:,:,i)*M);
+     create_cubo(TC(:,:,i)*Cu);
+     pause(a_speed);
+ end
+WTM1=TC(:,:,a_inc); %Store Current Pos
 
 % T=[rot('Z',90,'deg') [0 0 5]'
 %     0 0 0 1];
