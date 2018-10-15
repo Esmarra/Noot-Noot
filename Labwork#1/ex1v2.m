@@ -58,16 +58,15 @@ end
 
 %% ==== Translate 3 unidades em Realação Oz Object ==== %% --> WTC2
 fprintf(' >Trans 3 Oz-Object\n')
-WTC2=WTC1; % Cheat para o for funcionar :/
 for i=1:a_inc
-    WTC2 = WTC2*Transform(0,0,0, [0 0 3/a_inc]','deg') ;
+    WTC2 = WTC1*Transform(0,0,0, [0 0 i*3/a_inc]','deg') ;
     h3=create_cubo(WTC2*C);
     pause(a_speed)
-    %set(h3,'Visible','off')
-    delete(h3);
+    set(h3,'Visible','off')
+    %delete(h3);
 end
-%set(h3,'Visible','on')
-%alpha(h3,.2); %fade
+set(h3,'Visible','on')
+alpha(h3,.2); %fade
 
 %% ==== Rodar -45º em Realação a [1,-1,1] do Object inicial ==== %% --> WTC3
 fprintf(' >Rot -45º [1,-1,1] Obj0\n')

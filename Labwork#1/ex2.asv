@@ -3,7 +3,7 @@ clear;
 close all;
 %% ==== Variables ==== %%
 a_inc=5;        %Animation Increment
-a_speed=0.005;  %Animation Speed
+a_speed=0.08;  %Animation Speed
 
 %% ==== Create Window ==== %%
 world_size=10;
@@ -85,9 +85,9 @@ delete(hM1);   %Apaga a posição incial do Manipulo
 % %==== Rodar 90º em Realação a [0,0,1] do Object inicial ====%
 fprintf(' Rotação de 90º do Manipulo\n')
 for i=1:a_inc 
-    WTM=[matriz_rot([0 0 1]',deg2rad(-i*90/a_inc)) [0 yM zM]'
+    WTM1=[matriz_rot([0 0 1]',deg2rad(-i*90/a_inc)) [0 yM zM]'
     0 0 0 1];
-    h1=create_M(WTM*M);
+    h1=create_M(WTM1*M);
     pause(a_speed)
     delete(h1);
     %set(h1,'Visible','off')
@@ -96,8 +96,8 @@ end
 % %==== Translate yM-yA-4 unidades em Realação Ox e Translate 1 unidades em Realação Oy  Object ====% 
  fprintf(' Deslocação do Manipulo em Y para o objecto A \n')
  for i=1:a_inc
-    WTM = WTM*Transform(0,0,0, [(yM-yA-4)/a_inc 1/a_inc 0]','deg') ;
-    h2=create_M(WTM*M);
+    WTM2 = WTM1*Transform(0,0,0, [i*(yM-yA-4)/a_inc i*1/a_inc 0]','deg') ;
+    h2=create_M(WTM2*M);
     pause(a_speed)
     delete(h2);
 %   set(h2,'Visible','off')
@@ -106,8 +106,8 @@ end
 % %==== Translate zM unidades em Realação Oz Object ====% 
  fprintf(' Deslocação do Manipulo em Z para o objecto A \n')
  for i=1:a_inc
-    WTM = WTM*Transform(0,0,0, [0 0 -zM/a_inc]','deg') ;
-    h3=create_M(WTM*M);
+    WTM3 = WTM2*Transform(0,0,0, [0 0 i*-zM/a_inc]','deg') ;
+    h3=create_M(WTM3*M);
     pause(a_speed)
     delete(h3);
 %   set(h3,'Visible','off')
@@ -116,16 +116,16 @@ end
  delete(hA1);%apaga a posição inicial do objecto A
 %set (hA1,'Visible','off')
 
-WTM =WTM*Transform(0,0,0, [yA 0 0]','deg') ;%define a posição do manipulo antes da rotação
+WTM4 =WTM3*Transform(0,0,0, [yA 0 0]','deg') ;%define a posição do manipulo antes da rotação
 
 fprintf('\n \n 2 Objectos\n\n')
 
  % %==== Translate zM unidades em Realação Oz Object ====% 
  fprintf(' Deslocação do Manipulo e do objecto A para cima\n')
  for i=1:a_inc
-    WTA =WTA*Transform(0,0,0, [0 0 zM/a_inc]','deg') ;
-    h4 =create_AB(WTA*A);
-    h5 =create_M(WTA*WTM*M); %desloca M com o movimento de A
+    WTA1 =WTA*Transform(0,0,0, [0 0 i*zM/a_inc]','deg') ;
+    h4 =create_AB(WTA1*A);
+    h5 =create_M(WTA1*WTM4*M); %desloca M com o movimento de A
     pause(a_speed)
     delete(h4);
     delete(h5);
@@ -136,9 +136,9 @@ fprintf('\n \n 2 Objectos\n\n')
 % % %==== Rodar 180º em Realação a [0,0,1] do Object inicial ====%
 fprintf(' Rotação de 180º em z do Manipulo e do objecto A\n')
 for i=1:a_inc 
-    WTA=WTA*Transform(0, 0, 180/a_inc, [0 0 0]','deg');
-    h6=create_AB (WTA*A);
-    h7=create_M (WTA*WTM*M);%desloca M com o movimento de A
+    WTA2=WTA1*Transform(0, 0, i*180/a_inc, [0 0 0]','deg');
+    h6=create_AB (WTA2*A);
+    h7=create_M (WTA2*WTM4*M);%desloca M com o movimento de A
     pause(a_speed)
     delete(h6);
     delete(h7);
@@ -149,9 +149,9 @@ end
 % %==== Rodar 90º em Realação a [1,0,0] do Object inicial ====%
 fprintf(' Rotação de 90º em x do Manipulo e do objecto A \n')
 for i=1:a_inc     
-    WTA=WTA*Transform(90/a_inc, 0, 0, [0 0 0]','deg');
-    h8=create_AB (WTA*A);
-    h9=create_M (WTA*WTM*M);%desloca M com o movimento de A
+    WTA3=WTA2*Transform(i*90/a_inc, 0, 0, [0 0 0]','deg');
+    h8=create_AB (WTA3*A);
+    h9=create_M (WTA3*WTM4*M);%desloca M com o movimento de A
     pause(a_speed)
     delete(h8);
     delete(h9);
@@ -162,9 +162,9 @@ end
 % %==== Translate yB-yA unidades em Realação Ox Object & Translate xB+w unidades em Realação Ox Object ====%
  fprintf(' Deslocação do Manipulo e do objecto A em X e Y\n')
   for i=1:a_inc
-    WTA =WTA*Transform(0,0,0, [-(yB-yA)/a_inc -(xB+w)/a_inc 0]','deg') ;
-    h10=create_AB (WTA*A);
-    h11=create_M (WTA*WTM*M);
+    WTA4 =WTA3*Transform(0,0,0, [-i*(yB-yA)/a_inc -i*(xB+w)/a_inc 0]','deg') ;
+    h10=create_AB (WTA4*A);
+    h11=create_M (WTA4*WTM4*M);
     pause(a_speed)
     delete(h10);
     delete(h11);
@@ -175,21 +175,22 @@ end
  % %==== Translate zM-hB-HB-hA unidades em Realação Oz Object ====% 
 fprintf(' Deslocação do Manipulo e do objecto A em Z para encaixar no objecto B\n')
  for i=1:a_inc
-    WTA =WTA*Transform(0,0,0, [0 0 (zM-hB-HB-hA)/a_inc]','deg') ;
-    h12=create_AB (WTA*A);
-    h13=create_M (WTA*WTM*M);
+    WTA5 =WTA4*Transform(0,0,0, [0 0 i*(zM-hB-HB-hA)/a_inc]','deg') ;
+    h12=create_AB (WTA5*A);
+    h13=create_M (WTA5*WTM4*M);
     pause(a_speed)
     delete(h13);
     set(h12,'Visible','off')
 %   set(h13,'Visible','off')
  end
+ 
   %% ==== Deslocamento de M ==== %%
  set(h12,'Visible','on')% mantem o objecto A visivel
 
 % %==== Translate hA unidades em Realação Oz Object ====% 
  fprintf(' Deslocação do Manipulo para cima em Z\n')
  for i=1:a_inc
-    WTM =WTM*Transform(0,0, 0, [0 0 -(hA)/a_inc]','deg') ;
+    WTM5 =WTM4*Transform(0,0, 0, [0 0 -i*(hA)/a_inc]','deg') ;
     h15=create_M (WTA*WTM*M);
     pause(a_speed)
     delete(h15);
@@ -269,7 +270,7 @@ fprintf(' Deslocação do Manipulo e dos objectos  A e B em y\n')
 %     X =Pontos(1,:);
 % 	Y =Pontos(2,:);
 % 	Z =Pontos(3,:);
-%     [~, c]=size(Pontos);
+%     [~,c]=size(Pontos);
 %     h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),'r'); % Front(x=1)
 %     h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'w'); % Back(x=0)
 %     h(3)=fill3([X(1),X(c/2),X(c),X(c/2+1)],[Y(1),Y(c/2),Y(c),Y(c/2+1)],[Z(1),Z(c/2),Z(c),Z(c/2+1)],'y'); % Bottom(z=0)
@@ -302,17 +303,17 @@ fprintf(' Deslocação do Manipulo e dos objectos  A e B em y\n')
 % end
 
 %% ==== Function to Create Figure C ==== %%
-function h = create_C(Pontos)
-    X =Pontos(1,:);
-	Y =Pontos(2,:);
-	Z =Pontos(3,:);
-    [l, c]=size(Pontos);
-    h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),'r'); % Front(x=1)
-    h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'w'); % Back(x=0)
-    h(3)=fill3([X(1),X(c/2),X(c),X(c/2+1)],[Y(1),Y(c/2),Y(c),Y(c/2+1)],[Z(1),Z(c/2),Z(c),Z(c/2+1)],'y'); % Bottom(z=0)
-    h(4)=fill3([X(c/2),X(c/2-1),X(c-1),X(c)],[Y(c/2),Y(c/2-1),Y(c-1),Y(c)],[Z(c/2),Z(c/2-1),Z(c-1),Z(c)],'b'); % Side1(y=1)
-    h(5)=fill3([X(c/2-1),X(c/2-2),X(c-2),X(c-1)],[Y(c/2-1),Y(c/2-2),Y(c-2),Y(c-1)],[Z(c/2-1),Z(c/2-2),Z(c-2),Z(c-1)],'g'); % Top(z=1)
-    h(6)=fill3([X(c/2-3),X(c/2-2),X(c/2+4),X(c/2+3)],[Y(c/2-3),Y(c/2-2),Y(c/2+4),Y(c/2+3)],[Z(c/2-3),Z(c/2-2),Z(c/2+4),Z(c/2+3)],'b'); % Top(z=1)
-    h(7)=fill3([X(c/2-3),X(2),X(c/2+2),X(c/2+3)],[Y(c/2-3),Y(2),Y(c/2+2),Y(c/2+3)],[Z(c/2-3),Z(2),Z(c/2+2),Z(c/2+3)],'m'); % Top(z=1)
-    h(8)=fill3([X(1),X(2),X(c/2+2),X(c/2+1)],[Y(1),Y(2),Y(c/2+2),Y(c/2+1)],[Z(1),Z(2),Z(c/2+2),Z(c/2+1)],'b'); % Top(z=1)
-end
+% function h = create_C(Pontos)
+%     X =Pontos(1,:);
+% 	Y =Pontos(2,:);
+% 	Z =Pontos(3,:);
+%     [~,c]=size(Pontos);
+%     h(1)=fill3(X(1:c/2),Y(1:c/2),Z(1:c/2),'r'); % Front(x=1)
+%     h(2)=fill3(X(c/2+1:c),Y(c/2+1:c),Z(c/2+1:c),'w'); % Back(x=0)
+%     h(3)=fill3([X(1),X(c/2),X(c),X(c/2+1)],[Y(1),Y(c/2),Y(c),Y(c/2+1)],[Z(1),Z(c/2),Z(c),Z(c/2+1)],'y'); % Bottom(z=0)
+%     h(4)=fill3([X(c/2),X(c/2-1),X(c-1),X(c)],[Y(c/2),Y(c/2-1),Y(c-1),Y(c)],[Z(c/2),Z(c/2-1),Z(c-1),Z(c)],'b'); % Side1(y=1)
+%     h(5)=fill3([X(c/2-1),X(c/2-2),X(c-2),X(c-1)],[Y(c/2-1),Y(c/2-2),Y(c-2),Y(c-1)],[Z(c/2-1),Z(c/2-2),Z(c-2),Z(c-1)],'g'); % Top(z=1)
+%     h(6)=fill3([X(c/2-3),X(c/2-2),X(c/2+4),X(c/2+3)],[Y(c/2-3),Y(c/2-2),Y(c/2+4),Y(c/2+3)],[Z(c/2-3),Z(c/2-2),Z(c/2+4),Z(c/2+3)],'b'); % Top(z=1)
+%     h(7)=fill3([X(c/2-3),X(2),X(c/2+2),X(c/2+3)],[Y(c/2-3),Y(2),Y(c/2+2),Y(c/2+3)],[Z(c/2-3),Z(2),Z(c/2+2),Z(c/2+3)],'m'); % Top(z=1)
+%     h(8)=fill3([X(1),X(2),X(c/2+2),X(c/2+1)],[Y(1),Y(2),Y(c/2+2),Y(c/2+1)],[Z(1),Z(2),Z(c/2+2),Z(c/2+1)],'b'); % Top(z=1)
+% end

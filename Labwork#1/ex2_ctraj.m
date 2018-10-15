@@ -155,7 +155,11 @@ h4=create_cubo(WTC*Cu);
 % end
 %% ==== CTRAJ ==== %%
 
-TC=ctraj(WTM,WTA,a_inc);
+% Rodar A OZ(A) 180
+WTA1=[rot('Z',180,'deg') [0 w+2*yA 0]'
+    0 0 0 1]*WTA;
+
+TC=ctraj(WTM,WTA1,a_inc);
  for i=1:a_inc
      delete(hM)
      hM=create_M(TC(:,:,i)*M);
