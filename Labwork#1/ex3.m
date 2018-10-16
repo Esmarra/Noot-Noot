@@ -1,7 +1,6 @@
 clear; clc; close all;
 
 syms t1 t2 t3 t4 t5; % Tetas
-sym pi;
 
 %% ==== Create Window ==== %%
 world_size=8;
@@ -15,47 +14,62 @@ set(gcf, 'Position', [1440-w_size/2, 540-w_size/2, w_size, w_size])
 view(135, 50);
 grid on
 hold on
+a_inc=10; %Animation Increment
+a_speed=0.15; %Animation Speed
 %%
 %    t d a alfa offset   
 DH=[t1 0 0  pi/2  pi/2 %0->1
     t2 0 4   0     0   %1->2
     t3 0 2   0     0   %2->3
     t4 0 0 -pi/2 -pi/2 %3->4
-    t5 1 0   0     0];   %4->G
-
+    t5 1 0   0     0]; %4->G
+[l,~]=size(DH);
 
 %% ==== Pos Home ==== %%
-%Robot.plot([0 0 0 0 0]);
+for i=1:a_inc
+    T=[0 i*90/a_inc -i*90/a_inc 0 0];
+    %T=[0 0 0 0 0];
+    
+    % Converte Para Rad
+    T=deg2rad(T); 
+    % ==== Replace Matrix0 Tetas ==== %
+    DH=eval(subs(DH,[t1 t2 t3 t4 t5],deg2rad(T)));
+    for j=1:l % Corre Todas as Linhas da DH
+        DH(j,1)=T(j);
+    end
+    [A,h,v]=Arroz(DH);
+    pause(a_speed);
+    if(i~=a_inc)
+        set(h,'Visible','off');
+        delete(v);
+    end
+end
 
-%trplot();
-hold on;
-
-T=[0 0 0 0 0];
-DH=eval(subs(DH,[t1 t2 t3 t4 t5],deg2rad(T)));
-A=Arroz(DH);
-function A=Arroz(DH)
+%% ==== Calc MDM and Draw ===%
+function [A,h,v]=Arroz(DH)
     [c,~]=size(DH);
     cor=['r','b','g','m','y'];
-    %A(:,:,c)=zeros(4,4,c);
+    %A(:,:,c)=zeros(4,4,c); %PreDeclarar a Zeros Multi Dim Matrix
     for i=1:c
         tet=DH(i,1);d=DH(i,2);a=DH(i,3);alf=DH(i,4);of=DH(i,5);
         A(:,:,i)=[cos(tet+of) -sin(tet+of)*cos(alf) sin(tet+of)*sin(alf) a*cos(tet+of)
             sin(tet+of) cos(tet+of)*cos(alf) -cos(tet+of)*sin(alf) a*sin(tet+of)
             0 sin(alf) cos(alf) d
             0 0 0 1];
-        % Get Vector Pos
-        t(:,i)=A(1:3,4,i);
+        
         if(i<2)
             T=A(:,:,i);
         end
         if(i>1)
             T=T*A(:,:,i);
         end
-        trplot(T,'color',cor(i));
+        h(i)=trplot(T,'color',cor(i));
         
-        s=1; %vector size
-        %coordenadas do ponto anterior
-        %v=plot3([t(1)-1;t(1)-1+s],[t(2)-1;t(2)-1-s],[t(3),t(3)+s],'r'); % Vector
+        t(:,i)=T(1:3,4);
+        if(i>1)
+            v(i)=plot3([t(1,i-1);t(1,i)],[t(2,i-1),t(2,i)],[t(3,i-1),t(3,i)],'k');
+            set(v(i),'LineWidth',2);
+        end
     end
 end
 %% ==== Animate Arm ==== %%
