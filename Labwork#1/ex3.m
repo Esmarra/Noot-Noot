@@ -1,35 +1,59 @@
 clear; clc; close all;
 
-syms t1 t2 t3 t4 t5;
-global Robot;
+syms t1 t2 t3 t4 t5; % Tetas
+sym pi;
 
-%       t d alpha  a offset   
-PJ_DH=[t1 0  pi/2  0      0     %0->1
-       t2 0     0  4   pi/2     %1->2
-       t3 0     0  2      0     %2->3
-       t4 0 -pi/2  0  -pi/2     %3->4
-       t5 1     1  0      0];   %4->G
+%% ==== Create Window ==== %%
+world_size=8;
+axis([-world_size world_size, -world_size world_size , -world_size world_size])
+xlabel('X')
+ylabel('Y')
+zlabel('Z')
+text(0,0,0, 'O')
+w_size=900;
+set(gcf, 'Position', [1440-w_size/2, 540-w_size/2, w_size, w_size])
+view(135, 50);
+grid on
+hold on
+%%
+%    t d alpha  a offset   
+DH=[t1 0  pi/2  0      pi/2     %0->1
+    t2 0     0  4      0     %1->2
+    t3 0     0  2      0     %2->
+    t4 0 -pi/2  0  -pi/2     %3->4
+    t5 1     1  0      0];   %4->G
 
-
-%% ==== Create Robot Links ==== %%
-L1=Link('d', 0, 'a', 0, 'alpha', pi/2, 'offset', 0, 'qlim', [-pi/2 pi/2]);
-L2=Link('d', 0, 'a', 4, 'alpha', 0, 'offset', pi/2, 'qlim', [-pi/3 pi/4]);
-L3=Link('d', 0, 'a', 2, 'alpha', 0, 'offset', 0, 'qlim', [-pi/3 pi/4]);
-L4=Link('d', 0, 'a', 0, 'alpha', -pi/2, 'offset', -pi/2, 'qlim', [-pi/2 pi/2]);
-L5=Link('d', 1, 'a', 0, 'alpha', 0, 'offset', 0, 'qlim', [-pi pi]);
-Robot=SerialLink([L1 L2 L3 L4 L5]);
 
 %% ==== Pos Home ==== %%
-Robot.plot([0 0 0 0 0]);
+%Robot.plot([0 0 0 0 0]);
 
-
-L=[90 90 90 90 90];
-animate(5,L);
-
-%% ==== Animate Arm ==== %%
-function animate(a_inc,L)
-    global Robot;
-    for i=1:a_inc
-        Robot.teach('rpy',[deg2rad(i*L(1)/a_inc) deg2rad(i*L(2)/a_inc) deg2rad(i*L(3)/a_inc) deg2rad(i*L(4)/a_inc) deg2rad(i*L(5)/a_inc)]);
+%trplot();
+hold on;
+A=[ rot('X',90,'deg') [2 2 0]'
+    [0 0 0 1]];
+%H=trplot(A,'color','r');
+T=[0 0 0 0 0];
+%animate(5,L);
+DH=eval(subs(DH,[t1 t2 t3 t4 t5],deg2rad(T)));
+A=Arroz(DH);
+function A=Arroz(DH)
+    [c,~]=size(DH);
+    cor=['r','b','g','m','y','w'];
+    %A(:,:,c)=zeros(4,4,c);
+    for i=1:c
+        tet=DH(i,1);d=DH(i,2);a=DH(i,3);alf=DH(i,4);of=DH(i,5);
+        %eval(subs(DH,tet,90))
+        A(:,:,i)=[cos(tet+of) -sin(tet+of)*cos(alf) sin(tet+of)*sin(alf) a*cos(tet+of)
+            sin(tet+of) cos(tet+of)*cos(alf) -cos(tet+of)*sin(alf) a*sin(tet+of)
+            0 sin(alf) cos(alf) d
+            0 0 0 1];
+        trplot(A(:,:,i),'color',cor(i));
     end
 end
+%% ==== Animate Arm ==== %%
+% function animate(a_inc,L)
+%     global Robot;
+%     for i=1:a_inc
+%         Robot.teach('rpy',[deg2rad(i*L(1)/a_inc) deg2rad(i*L(2)/a_inc) deg2rad(i*L(3)/a_inc) deg2rad(i*L(4)/a_inc) deg2rad(i*L(5)/a_inc)]);
+%     end
+% end
