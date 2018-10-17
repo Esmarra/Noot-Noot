@@ -13,7 +13,7 @@ ylabel('Y')
 zlabel('Z')
 text(0,0,0, 'O')
 w_size=900;
-set(gcf, 'Position', [2500-w_size/2, 540-w_size/2, w_size, w_size])
+set(gcf, 'Position', [1440-w_size/2, 540-w_size/2, w_size, w_size])
 view(135, 50);
 grid on
 hold on
