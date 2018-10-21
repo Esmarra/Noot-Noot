@@ -1,4 +1,5 @@
-% Cria Matriz Rotação com um Vector e angulo
+% Devolve Matriz Rotação(3x3) dado: vector (r) / angulo (phi)
+% Matriz rotacao sobre eixo arbritario ver Slides3 Pag20
 
 function R=matriz_rot(r, phi)
 	r_x=r(1,1)/norm(r);

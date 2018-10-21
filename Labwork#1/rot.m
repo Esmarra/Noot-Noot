@@ -1,3 +1,4 @@
+%Devolve a Matriz Rot(3x3) dado: eixo rot('X'ou'Y'ou'Z') / angulo(teta) / unidade('deg'ou'rad')
 function R = rot(axis,teta,unit)
 	if(unit=='deg')
 		% Conv to Rad (can also use deg2rad)
