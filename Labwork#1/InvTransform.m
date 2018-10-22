@@ -1,3 +1,4 @@
+% Devolve Matriz Transformada Inversa Homogenea(4x4) dado: ATB
 function [BTA] = InvTransform(ATB)
 	% Get Matriz Rotação
 	ARB=ATB(1:3,1:3);

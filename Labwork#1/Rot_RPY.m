@@ -1,4 +1,4 @@
-% Cria Matriz Transformação com Roll-Pitch-Yaw e um Vector
+% Devolve Matriz Rotacao(3x3) dado: roll(alfa)-pitch(beta)-yaw(gama)  / unit('deg'ou'rad')
 
 function [R] = Rot_RPY(alpha, beta, gama,unit)
 	if(unit=='deg')
