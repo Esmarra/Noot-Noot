@@ -62,8 +62,8 @@ disp(ATB1)
 %ii) Deslocar A d unidades segundo ZBinicial
 uni=2;
 for i=1:a_inc
-    A1=ATB*[ eye(3) [0 0 (i*uni/a_inc)]'
-        0 0 0 1];
+    A1=[ eye(3) [0 0 (i*uni/a_inc)]'
+        0 0 0 1]*A;
     p1=A1(1:3,4);
     a1(1)=text(p1(1),p1(2),p1(3),'A1','color','g');
     a1(2)=trplot(A1,'color','g');
@@ -73,11 +73,11 @@ end
 disp(A1)
 
 %iii) Rodar B beta segundo XAactual
-ang=(pi/2);
+ang=(-pi/2);
 %while true
 for i=1:a_inc
 	% Alfa-Z Beta-Y Gama-X
-	ATB2 = inv(A1)*Transform(i*ang/a_inc,0,0,[0 0 0]','rad')*A1*ATB1;
+	ATB2 = inv(A)*Transform(0,0,i*ang/a_inc,[0 0 0]','rad')*A*ATB1;
     %A2 = InvTransform(ATB)*Transform(0,i*ang/a_inc,0,[0 0 0]','rad')*A1;
     p1=ATB2(1:3,4);
     b1(1)=text(p1(1),p1(2),p1(3),'ATB2','color','b');

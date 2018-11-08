@@ -18,7 +18,7 @@ hold on
 
 %% ==== Variables ==== %%
 a_inc=10; %Animation Increment
-a_speed=0.15; %Animation Speed
+a_speed=0.08; %Animation Speed
 
 %%
 A=[eye(3) [0 0 0]';0 0 0 1];
@@ -51,35 +51,45 @@ set(v,'LineWidth',2);
 ang=(pi/2);
 %ang=(1.8*pi);
 for i=1:a_inc
-    RB=[matriz_rot(r,i*ang/a_inc) [0 0 0]'
-    0 0 0 1]*ATB
-    p1=RB(1:3,4);
-    text(p1(1),p1(2),p1(3),'B1','color','b')
-    trplot(RB,'color','b');
+    B1=[matriz_rot(r,i*ang/a_inc) [0 0 0]'
+    0 0 0 1]*ATB;
+    p1=B1(1:3,4);
+    b1(1)=text(p1(1),p1(2),p1(3),'B1','color','b');
+    b1(2)=trplot(B1,'color','b');
     pause(a_speed);
+    if(i~=a_inc)delete(b1);end
 end
-
+disp(B1)
 % ii) Deslocar A 4unidades segundo Br
 %sou burro por isso vou dizer q A esta na origem
 
 for i=1:a_inc
     A1=A*[ eye(3) r*(i*4/a_inc)
-        0 0 0 1]
+        0 0 0 1];
     p1=A1(1:3,4);
-    text(p1(1),p1(2),p1(3),'A1','color','g')
-    trplot(A1,'color','g');
+    a1(1)=text(p1(1),p1(2),p1(3),'A1','color','g');
+    a1(2)=trplot(A1,'color','g');
     pause(a_speed);
+    if(i~=a_inc)delete(a1);end
 end
-%% iii) Rodar A (-pi/2) segundo Oyb
+disp(A1)
+
+%% iii) Rodar A1 (-pi/2) segundo Oyb
 ang=(-pi/2);
 for i=1:a_inc
 	% Alfa-Z Beta-Y Gama-X
-	A2 = Transform(0,i*ang/a_inc,0, [0 0 0]','rad')*A1 ;
+	A2 = InvTransform(B1)*Transform(0,i*ang/a_inc,0,[0 0 0]','rad')*B1*A1;
+    %A2 = InvTransform(ATB)*Transform(0,i*ang/a_inc,0,[0 0 0]','rad')*A1;
     p1=A2(1:3,4);
-    text(p1(1),p1(2),p1(3),'A1','color','y')
-	trplot(A2,'color','y');
+    a2(1)=text(p1(1),p1(2),p1(3),'A2','color','y');
+	a2(2)=trplot(A2,'color','y');
 	pause(a_speed);
+    %if(i~=a_inc)delete(a2);end
 end
+disp(A2)
+%% Nao sei fazer
 fprintf("Matrix ATB?\n");
-disp(A1);
+A2TB1=InvTransform(A2)*InvTransform(A1)*A*B1;
+trplot(A2TB1,'color','m');
+disp(A2TB1);
 %Calc ATB????
