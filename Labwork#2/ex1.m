@@ -29,7 +29,11 @@ L3=Link('d', 0, 'a', 0, 'alpha', pi/2, 'offset', pi/2 );
 L4=Link('d', 2, 'a', 0, 'alpha', 0, 'offset', pi/2 );
 
 Robot=SerialLink([L1 L2 L3 L4], 'name', 'i) FK'); %Mudar Conforme os Links :/
-%% ==== Pos Home ==== %%
+
+% Extra Step Calc Symbolic Zero to End Efector Matrix
+oAhi_symb=simplify(FK_MGD_DH(PJ_DH))
+
+%% ==== i) ==== %%
 disp(" ==== Pergunta b) 0A2 e 0AH ==== ");
 disp("  ==== i) q=[0 0 0] ====  ");
 q=[0 0 0 0];
@@ -45,7 +49,7 @@ disp(round(oA2i))
 disp(" OAH=");
 disp(round(oAhi))
 
-%% ==== ii)
+%% ==== ii) ==== %%
 disp("  ==== ii) q=[10 20 30] ====  ");
 q=[10 20 30 0];
 % Replace DH Matrix Tetas
@@ -61,7 +65,7 @@ disp(round(oA2ii))
 disp(" OAH=");
 disp(round(oAhii))
 
-%% ==== iii)
+%% ==== iii) ==== %%
 disp("  ==== iii) q=[90 90 90] ====  ");
 q=[90 90 90 0];
 % Replace DH Matrix Tetas
@@ -78,7 +82,7 @@ disp(" OAH=");
 disp(round(oAhiii))
 
 
-%% e)
+%% ==== e) ==== %%
 disp(" ==== Pergunta e) usando invkine desenhe os robots ==== ");
 figure('Name','Inverse Kinematics');
 w_size=900;
