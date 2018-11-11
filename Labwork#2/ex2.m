@@ -76,17 +76,19 @@ L2i=Link('theta',0,'a',0,'alpha', pi/2   , 'offset', a2, 'qlim', [0 5]);
 Roboti=SerialLink([L1i L2i], 'name', 'BoT i)');
 
 %ii)
+a3=0;
 L1ii=Link('d',0, 'a', a2 , 'alpha', pi/2  , 'offset', pi/2 ); %R
 L2ii=Link('theta', 0, 'a', 0 , 'alpha', 0  , 'offset', a1+a3, 'qlim', [0 5]); %Prismatic qlim maxes d-travel  
 Robotii=SerialLink([L1ii L2ii], 'name', 'BoT ii)');
-
+a3=2;
 %iii)
+a2=0;
 L1iii=Link('d',0, 'a', 0 , 'alpha', pi/2  , 'offset', pi/2 ); %R
 L2iii=Link('theta', 0, 'a', 0 , 'alpha', -pi/2  , 'offset', a1+a2, 'qlim', [0 5]); %Prismatic qlim maxes d-travel
 L3iii=Link('d',0, 'a', 0 , 'alpha', pi/2  , 'offset', 0 ); %R
 L4iii=Link('theta', pi/2, 'a', 0 , 'alpha', 0  , 'offset', a3,'qlim',[0 0]); %Prismatic qlim maxes d-travel
 Robotiii=SerialLink([L1iii L2iii L3iii L4iii], 'name', 'BoT iii)');
-
+a2=2;
 %% ==== Com Punho Esferico acopolado ==== %%
 %i)pe
 L1i_pe=Link('theta',-pi/2,'a',0,'alpha', -pi/2  , 'offset',a1 , 'qlim', [0 5]); %Offset(angle) das Prismaticas passa para teta na toolbox (acho eu)
@@ -97,13 +99,14 @@ L5i_pe=Link('d',a3,'a',0,'alpha', 0  , 'offset', pi/2);
 Roboti_pe=SerialLink([L1i_pe L2i_pe L3i_pe L4i_pe L5i_pe], 'name', 'BoT i)pe');
 
 %ii)pe
+a3=0;
 L1ii_pe=Link('d',0, 'a', a2 , 'alpha', pi/2  , 'offset', pi/2 ); %R
 L2ii_pe=Link('theta', 0, 'a', 0 , 'alpha', 0  , 'offset', a1+a3, 'qlim', [0 5]); %Prismatic qlim maxes d-travel
 L3ii_pe=Link('d',0,'a',0,'alpha', -pi/2   , 'offset', 0);
 L4ii_pe=Link('d',0,'a',0,'alpha', pi/2   , 'offset', 0);
 L5ii_pe=Link('d',a4,'a',0,'alpha', 0  , 'offset', pi/2);
 Robotii_pe=SerialLink([L1ii_pe L2ii_pe L3ii_pe L4ii_pe L5ii_pe], 'name', 'BoT ii)pe');
-
+a3=2;
 %iii)pe
 L1iii_pe=Link('d',0, 'a', 0 , 'alpha', pi/2  , 'offset', pi/2 ); %R
 L2iii_pe=Link('theta', 0, 'a', 0 , 'alpha', -pi/2  , 'offset', l1, 'qlim', [0 5]); %Prismatic qlim maxes d-travel
@@ -122,7 +125,7 @@ Robotii.plot([0 0],'tilesize',3);
 Robotii.teach([0 0]);
 
 figure('Name',"Robot iii)RPR")
-Robotiii.plot([0 0 0 0],'tilesize',3);
+Robotiii.plot([0 0 0 0],'tilesize',3,'workspace', [-10 10 -10 10 -10 10]);
 Robotiii.teach([0 0 0 0]);
 
 % ==== b) Descrita nas Folhas, Matrizes em Cima e MGD_DH em cima
@@ -135,5 +138,5 @@ Robotii_pe.plot([0 0 0 0 0],'tilesize',3);
 Robotii_pe.teach([0 0 0 0 0]);
 
 figure('Name',"Robot iii)RPR-RRR")
-Robotiii_pe.plot([0 0 0 0 0 0],'tilesize',3);
+Robotiii_pe.plot([0 0 0 0 0 0],'tilesize',3,'workspace', [-10 10 -10 10 -10 10]);
 Robotiii_pe.teach([0 0 0 0 0 0]);

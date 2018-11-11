@@ -55,14 +55,14 @@ Robot_RRR.plot(deg2rad(q1),'tilesize',4,'trail',{'r', 'LineWidth', 2});
 q2=[0 0];
 Robot_RT.plot(deg2rad(q2),'linkcolor','g','jointdiam',2,'jointcolor','y');
 
-%% Fazer Algo?
+%% Forward Kine
 %Get Cadeia Cinematica(FK) RRR
 [oAh_RRR,A_RRR]=FK_MGD_DH(PJ_DH);
 %Get Cadeia Cinematica(FK) RT
 [oAh_RT,A_RT]=FK_MGD_DH(PJ_DH_RT);
 
 %Calc Inverse Kine RRR
-q_rrr=invkine_3(0,d) %t=0 d=5 porque...
+q_rrr=invkine_3(0,d)
 Robot_RRR.plot([q_rrr 0],'tilesize',4);
 PJ_DH1=double(subs(PJ_DH,[t1 t2 t3],q_rrr))
 
