@@ -5,7 +5,7 @@ a_inc=10;      %Animation Increment
 a_speed=0.08;  %Animation Speed
 syms t1 t2 t3 t4 t5 t6; % Tetas
 syms d1 d2 d3 d4 d5 d6;
-syms a a1 a2 a3;
+syms a a1 a2 a3 a4;
 syms l1;
 
 global Roboti Robotii Robotiii;
@@ -74,6 +74,6 @@ DH_iii_pe=[ t1   0        pi/2      0    pi/2    %0->1
             t4   a3      -pi/2      0      0    %3->4
             t5   0        pi/2      0      0     %4->5
             t6   a4        0        0   pi/2];  %5->6
-oAhiii_pe_symb=simplify(FK_MGD_DH(DH_iii_pe));
+oAhiii_pe_symb=simplify(FK_MGD_DH(DH_iii_pe))
 
 
