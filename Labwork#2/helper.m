@@ -21,13 +21,13 @@ syms l1;
 % T02=simplify(FK_MGD_DH(DH))
 
 %        theta d       alpha      a   offset
-DH_i_pe=[ t1   0       pi/2      a2    pi/2    %0->1
+DH_ii_pe=[ t1   0       pi/2      a2    pi/2    %0->1
           0 l1+d2     0        0   0     %1->2
           t3   0       -pi/2      0      0     %2->3
           t4   0        pi/2      0      0     %3->4
           t5  a4         0        0   pi/2];  %4->5
 disp(" 0TEE ");
-T0EE=simplify(FK_MGD_DH(DH_i_pe))
+T0EE=simplify(FK_MGD_DH(DH_ii_pe))
 
 %    theta     d       alpha    a   offset
 DH=[ t1   0       pi/2      a2    pi/2    %0->1
