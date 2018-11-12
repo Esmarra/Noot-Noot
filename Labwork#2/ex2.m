@@ -42,6 +42,7 @@ disp(" Matriz Simbolica i) PP-RRR 0T5");
 oAhi_pe_symb=simplify(FK_MGD_DH(DH_i_pe))
 
 %% ii) RP-RRR
+% NOTA: l1=a1+a3
 %        theta d       alpha      a   offset
 DH_ii_pe=[ t1   0       pi/2      a2    pi/2   %0->1
            0  d2+l1      0        0      0     %1->2
@@ -140,3 +141,8 @@ Robotii_pe.teach([0 0 0 0 0]);
 figure('Name',"Robot iii)RPR-RRR")
 Robotiii_pe.plot([0 0 0 0 0 0],'tilesize',3,'workspace', [-10 10 -10 10 -10 10]);
 Robotiii_pe.teach([0 0 0 0 0 0]);
+
+% ==== c)
+
+%qi_inv=ex3_invkine_bot1(
+%qi_tool=Roboti_pe.ikine(eval(oAhi_pe_symb), 'mask', [0 1 1 1 1 1]); % [x y z roll pitch yaw] 

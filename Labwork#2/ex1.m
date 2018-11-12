@@ -9,7 +9,7 @@ global Robot Robot_02;
 %% ==== Create Window ==== %%
 figure('Name',"Forward Kinematics")
 w_size=900;
-set(gcf, 'Position', [1440-w_size/2, 540-w_size/2, w_size, w_size])
+%set(gcf, 'Position', [1440-w_size/2, 540-w_size/2, w_size, w_size])
 view(135, 50);
 hold on
 
@@ -94,7 +94,7 @@ disp(double(oAhiii))
 disp(" ==== Pergunta e) usando invkine desenhe os robots ==== ");
 figure('Name','Inverse Kinematics');
 w_size=900;
-set(gcf, 'Position', [990-w_size, 540-w_size/2, w_size, w_size])
+%set(gcf, 'Position', [990-w_size, 540-w_size/2, w_size, w_size])
 view(135, 50);
 %i)
 qi=rad2deg(double(invkine_1(oAhi)))
