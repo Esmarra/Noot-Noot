@@ -1,4 +1,4 @@
-%Freq 1 2015_16
+%Freq 1 2015_16 EX1
 clear; 
 clc;
 close all;
@@ -18,11 +18,12 @@ hold on
 
 %% ==== Variables ==== %%
 a_inc=10; %Animation Increment
-a_speed=0.15; %Animation Speed
+a_speed=0.08; %Animation Speed
+%a_speed=0;
 
 %% Enunciado
 r=[1 0 0]';
-A=[matriz_rot(r,deg2rad(0)) [0 0 0]'
+A=[matriz_rot(r,deg2rad(-90)) [0 0 0]'
     0 0 0 1];
 %Plot A
 trplot(A,'color','k');
@@ -38,7 +39,7 @@ for i=1:a_inc
     pause(a_speed);
     if(i~=a_inc)delete(b1);end
 end
-disp("Matriz B2")
+disp("Matriz B1")
 disp(B1)
 
 %% 2- Rodar B (-pi/2) segundo Ar
@@ -65,12 +66,15 @@ ang=(-pi/2);
 for i=1:a_inc
 	% Alfa-Z Beta-Y Gama-X
 	A1 = InvTransform(B2)*Transform(i*ang/a_inc,0,0,[0 0 0]','rad')*B2*A;
-    %A2 = InvTransform(ATB)*Transform(0,i*ang/a_inc,0,[0 0 0]','rad')*A1;
     p1=A1(1:3,4);
     a2(1)=text(p1(1),p1(2),p1(3),'A1','color','y');
 	a2(2)=trplot(A1,'color','y');
 	pause(a_speed);
     if(i~=a_inc)delete(a2);end
 end
+disp("Matriz A1")
 disp(A1)
 
+A1TB2=inv(A1)*B2
+disp("Matriz A1TB2")
+disp(A1TB2)

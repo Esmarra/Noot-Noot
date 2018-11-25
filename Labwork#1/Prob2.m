@@ -20,8 +20,10 @@ grid on
 hold on
 
 %% ===== Start Position ==== %%
-WTA=[rot('X',90,'deg') [0 0 0]'
+% Crio A na origem
+WTA=[rot('X',0,'deg') [0 0 0]'
     0 0 0 1]
+% A é coincidente com B
 WTB=WTA;
 
 ATW=InvTransform(WTA)
@@ -46,7 +48,7 @@ fprintf("Com phi=30");
 WTB1=eval(subs(WTB1,[phi],deg2rad(30)))
 ATB1=eval(subs(ATB1,[phi],deg2rad(30)))
 hb=trplot(WTB1,'color','b');
-pause(1);
+pause();
 delete(hb);
 fprintf("Com teta=60 e phi=30");
 WTB2=eval(subs(WTB2,[phi,t1],deg2rad([30 60])))

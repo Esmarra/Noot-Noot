@@ -1,4 +1,5 @@
 % Devolve Roll(Alfa) Pitch(beta) Yaw(gama) dado: Matrix Rot(R)4x4
+% Alfa-Z Beta-Y Gama-X
 function [alfa,beta,gama]= matrix_to_RPY(R)
     % Obtem Angulos Euler(deg) ver Slides3 Pag17
     beta = atan2(-R(3,1),sqrt((R(1,1)^2)+(R(2,1)^2)));

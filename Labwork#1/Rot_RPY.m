@@ -1,5 +1,5 @@
 % Devolve Matriz Rotacao(3x3) dado: roll(alfa)-pitch(beta)-yaw(gama)  / unit('deg'ou'rad')
-
+% Alfa-Z Beta-Y Gama-X
 function [R] = Rot_RPY(alpha, beta, gama,unit)
 	if(unit=='deg')
 		% Conv to Rad (can also use deg2rad)
