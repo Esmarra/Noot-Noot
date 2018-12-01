@@ -20,8 +20,8 @@ hold on
 %        t3  0  pi/2  0  pi/2   %2->3
 %        0   2   0    0  pi/2]; %3->G
 syms a1 a2 a3;
-PJ_DH=[t1  0   0 a1   0    %1->2
-       t2  0  0  a2  0];   %2->3
+PJ_DH=[t1  0   0 a1   0 "R"   %1->2
+       t2  0  0  a2  0  "R"];   %2->3
 disp(" ==== Pergunta a) Matrix DH ==== ");
 disp(PJ_DH);
 

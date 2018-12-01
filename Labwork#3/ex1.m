@@ -12,9 +12,9 @@ steps = 80 ;
 
 %% ==== DH Matrix ==== %%
 %     theta    d      alpha     a    offset   
-   DH=[ t1     0        0       l1      0     %0->1
-        t2     0        0       l2      0     %1->2
-        t3     d3       0       0       0];   %2->G
+   DH=[ t1     0        0       l1      0  "R"   %0->1
+        t2     0        0       l2      0  "R"   %1->2
+        t3     d3       0       0       0  "R"];   %2->G
 
 %% ==== Assing Some Variables ==== %%
 l1 = 35 ;
@@ -47,7 +47,7 @@ fprintf('\n q3 = %f | %f\n\n',q(3,1),rad2deg(q(3,1)));
 
 %% Alinea b) Soluçâo para as variaveis de junta
 Jsyms=Jacobi(DH)
-
+T0=simplify(FK_MGD_DH(DH))
 %% Abordagem Integradora
 for i=1:1:steps
     %Replace q(t1 t2 t3-from invkine) in Jacobian
