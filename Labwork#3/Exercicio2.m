@@ -10,7 +10,7 @@ syms theta1 d2 theta3 theta4
    DH=[ theta1     0        pi/2       0       0      %0->1
         0          d2      -pi/2       0       0      %1->2
         theta3     0        pi/2       0       0      %2->3
-        theta4     10         0         0       1];    %3->G
+        theta4     10         0        0       1];    %3->G
         
       
 L1=Link('d'    ,  0 , 'a', 0 ,  'alpha', pi/2  , 'offset', pi/2 );
@@ -115,7 +115,7 @@ T_home=[0 -1 0 40;0 0 1 20; -1 0 0 0;0 0 0 1];
 
   Robot1=SerialLink([L1 L2 L3 L4]);
   Robot1.plotopt = {'floorlevel', 2, 'workspace', [-20, 60, -20, 40, -5, 5], 'reach', 10};
-
+  Robot1.plot(T_1')
     for i=1:1:40
   
     theta111=T_1(1,1); % theta1 pretendido na alinea b)
@@ -153,6 +153,9 @@ T_home=[0 -1 0 40;0 0 1 20; -1 0 0 0;0 0 0 1];
   T_1=T_1+Kd*T_; % q*(k+1)= q(k)+ Kv * delta_tempo * q*(k)
   
   title('Abordagem em malha fechada')
+  if(T_1(2,1)<0)
+    	T_1(2,1)=0;
+    end
   Robot1.plot(T_1');
   drawnow
   

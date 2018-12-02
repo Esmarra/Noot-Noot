@@ -4,11 +4,12 @@ function J=Jacobi2(DH)
     [n,~]=size(DH);
     T0_EE=simplify(FK_MGD_DH2(DH,n));
 
+    % Pre Alocate J
     a=0;
-    for i=1:1:n
+    for i=1:1:n % This Counts LINES(to prealocate)
         tp=DH(i,6);
         if (tp=="R" || tp=="P")
-            a=a+1
+            a=a+1;
         end
     end
     J = sym(zeros(6, a)); %Se der Erro conv 2 double ligar isto(NAO PODE
