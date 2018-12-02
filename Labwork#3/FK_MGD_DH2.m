@@ -1,4 +1,4 @@
-% Dada Matrix Denavit-Hartenberg calcula a Cinematic Chain do OTEE
+% Dada Matrix Denavit-Hartenberg calcula a Cinematic Chain do OTn-Frame
 % Devolve tb A(:,:,i) Multimatrix
 % Adaptação da funcao entregue no ex 3 da labwork1
 function [oTee,A]=FK_MGD_DH2(DH,n)

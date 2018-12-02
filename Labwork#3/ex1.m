@@ -106,7 +106,7 @@ for i=1:1:steps
     %Pose Desejada
     p = p + v * Dt;
 
-    %q*=J(q(k)).^-1 *(p*(k)-f(q(k))) 
+    %q*=J(q(k)).^-1 *(p*(k)-f(q(k)))
     q_=pinv(J)*(p-[T0_EE_CL.t;0;0;sum(q)]);
 
     % next q = old * deta t * q_ [q(k+1)=q(k)+Dt*q_(k)
