@@ -154,8 +154,8 @@ T_home=[0 -1 0 40;0 0 1 20; -1 0 0 0;0 0 0 1];
   
   title('Abordagem em malha fechada')
   if(T_1(2,1)<0)
-    	T_1(2,1)=0;
-    end
+	T_1(2,1)=0;
+  end
   Robot1.plot(T_1');
   drawnow
   

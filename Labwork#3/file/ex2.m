@@ -89,18 +89,10 @@ for i=1:1:steps
     y_data(i)=T0_E(i).t(2,1);
 end
 % 
-% % Data Analysis
-% %% Display Matrix Transfor & Velocidade rot
-% disp('T0_EE')
-% disp(T0_E(:,:,steps))
-% disp('Alinea b)')
-% disp('q_ = [   w1    w2    w3] RAD')
-% disp(q_(:,:,steps)')
-% 
-% %% Plot Recta
-% figure('Name',"Relação Pos-Recta Integradora")
-% plot(x_data,y_data,'o');
-% grid on;
+% Data Analysis
+figure('Name',"Relação Integradora")
+plot(x_data,y_data,'o');
+grid on;
 
 
 %% Abordagem em malha fechada
