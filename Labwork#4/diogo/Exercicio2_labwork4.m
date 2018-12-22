@@ -25,9 +25,9 @@ P_C=[-1 sqrt(2)/2 -sqrt(2)/2]';
 %% obtenção das variaveis das juntas no ponto A
 
 T_A = cinem_inv_ex2(P_A, 1);
-theta11 = T_A(1,1) 
-theta22 = T_A(1,2)    
-d33     = 0;  e
+theta11 = T_A(1,1);
+theta22 = T_A(1,2);
+d33     = 0;
 
 
 %% obtenção das variaveis das juntas no ponto B
@@ -45,6 +45,16 @@ theta1111 = T_C(1,1);
 theta2222 = T_C(1,2);       
 d3333     = 0;  
 
+T0A=[eye(3) P_A
+    0 0 0 1];
+T0B=[eye(3) P_B
+    0 0 0 1];
+T0C=[eye(3) P_C
+    0 0 0 1];
+hold on;
+trplot(T0A,'frame', 'A','color','r');
+trplot(T0B,'frame', 'B','color','b');
+trplot(T0C,'frame', 'C','color','k');
 
 %% b)
 %% obtenção das velocidades 
@@ -68,6 +78,9 @@ for i=1:2
     end
 end    
 
+VA_B
+VB_C
+VB
 %% Funções polinomiais cúbicas para o troço A -> B
 
 while(1)

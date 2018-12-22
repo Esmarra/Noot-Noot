@@ -1,5 +1,5 @@
 % Cinemática Inversa do Robô RPR
-function q = invkine_2(T0EE)
+function q = invkine_ex1(T0EE)
     % get n
     nx = T0EE(1,1); 
 	nx = T0EE(2,1); 
