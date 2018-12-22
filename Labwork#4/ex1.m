@@ -40,19 +40,65 @@ T0B=[ 0 0.8660 0.5 30.9808
       0 -0.5 0.8660 -6.3397
       1 0 0 0
       0 0 0 1];
-qa=invkine_2(T0A)'
-qi=invkine_2(T0I)'
-qb=invkine_2(T0B)'
+ 
+% Variaveis de Juntas 
+qa=invkine_2(T0A)' % No Ponto A
+qi=invkine_2(T0I)' % No Ponto I
+qb=invkine_2(T0B)' % No Ponto B
 
-Jsyms=Jacobi2(DH)
-J=eval(subs(Jsyms,[t1 d2 t3 a3],[qa' 10]));
-v=[zeros(1,6)]';
-qa_=pinv(J)*v
-while 1
-    Robot.plot([qa' 0]);
-    pause(.2)
-    Robot.plot([qi' 0]);
-    pause(.2)
-    Robot.plot([qb' 0]);
-    pause(.2)
+% Time Restriction (Passes Point @ t)
+time_A = 0;
+time_I = 5;
+time_B = 8;
+
+
+
+
+
+[p v a]=velocidades(qa,qi,0,5)
+
+function [pos,vel,acc]=velocidades(q_start,q_end,t_start,t_end)
+    syms t;
+    %Delta Time
+    Dt=t_end-t_start;
+    
+    [l,~]=size(q_start);
+    %pos=zeros(1,l); %Pre Alocate position
+    %vel=zeros(1,l); %Pre Alocate velocity
+    %acc=zeros(1,l); %Pre Alocate accelearation
+    
+    for i=1:1:l
+        %Delta Teta
+        Dteta=q_start(i,1)-q_end(i,1);
+        Dtime=t_end-t_start;
+        
+
+        vel_qaux= (Dteta)/(Dtime)
+
+        
+        
+%         a0=q_start(i,1); a1=0 ; a2=(3/Dt^2)*(Dteta); a3=(2/Dt^3)*(Dteta);
+%         pos(i)=a0+a2*t^2-a3*t^3;
+%         vel(i)=diff(pos(i));
+%         acc(i)=diff(vel(i));
+    end
+    
+    pos=eval(subs(pos,t,Dt));
+    vel=eval(subs(vel,t,Dt));
+    acc=eval(subs(acc,t,Dt));
 end
+
+% Jsyms=Jacobi2(DH)
+% J=eval(subs(Jsyms,[t1 d2 t3 a3],[qa' 10]));
+% v=[zeros(1,6)]';
+% qa_=pinv(J)*v
+% while 1
+%     Robot.plot([qa' 0]);
+%     pause(.2)
+%     Robot.plot([qi' 0]);
+%     pause(.2)
+%     Robot.plot([qb' 0]);
+%     pause(.2)
+% end
+
+
