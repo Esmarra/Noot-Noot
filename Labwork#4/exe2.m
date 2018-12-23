@@ -22,7 +22,7 @@ Robot.plotopt = {'floorlevel', 2,'trail',{'m', 'LineWidth', 2}};
 Robot.teach(deg2rad([-45 -45 0]))
 
 T0_EE=FK_MGD_DH(DH)
-%post calc
+% Post Calculation (Values from ik)
 T0_EE_A=eval(subs(T0_EE,[t1 t2],[-0.7854 -0.7854]));
 T0_EE_B=eval(subs(T0_EE,[t1 t2],[0 0.7854]));
 T0_EE_C=eval(subs(T0_EE,[t1 t2],[1.5708 0.7854]));
@@ -101,14 +101,17 @@ for t = time_b : interval : time_c
 end
 fprintf("(CALC) Joint Value at C:");disp(q_now);
 
-pause()
+pause(1)
 
 
-%% Alinea c)
+%%======== Alinea c) ========
+disp("==== Alinea c) ====")
+Robot.plot([qa' 0]);
 count=0;
-time_c_a=12;
 while(1)
+    if(count==7)count=0;end
     count=count+1;
+%     disp(count)
     % NEW TIME Vector 1Xpoints
     t_vec = [ 0 4 10 12 16 22 24 28 34 ];
     
@@ -116,16 +119,16 @@ while(1)
     time_a = t_vec(count);
     time_b = t_vec(count+1);
     time_c = t_vec(count+2);
-
+    time_c_a=time_c+2;
     % Calculate All joint velocitys for at Points
     v_qmat = velocidades([q_mat;q_mat(2:3,:);q_mat(3,:);q_mat], t_vec);
     
     vel_a=v_qmat(1,:);
     vel_b=v_qmat(2,:);
     vel_c=v_qmat(3,:);
-    fprintf("Joint Velocity at A:");disp(vel_a);
-    fprintf("Joint Velocity at B:");disp(vel_b);
-    fprintf("Joint Velocity at C:");disp(vel_c);
+%     fprintf("Joint Velocity at A:");disp(vel_a);
+%     fprintf("Joint Velocity at B:");disp(vel_b);
+%     fprintf("Joint Velocity at C:");disp(vel_c);
 
     %% Path A -> B
     for t = time_a : interval : time_b % #### Transformar em FUNCAO! ####
@@ -137,10 +140,10 @@ while(1)
         v_start = vel_a;
         v_end = vel_b;
         % Current Joint Var values
-        q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end)
+        q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end);
         Robot.animate([q_now 0]);
     end
-    fprintf("(CALC) Joint Value at B:");disp(q_now);
+%     fprintf("(CALC) Joint Value at B:");disp(q_now);
 
     %% Path B -> C
     for t = time_b : interval : time_c
@@ -155,7 +158,7 @@ while(1)
         q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end);
         Robot.animate([q_now 0]);
     end
-    fprintf("(CALC) Joint Value at C:");disp(q_now);
+%     fprintf("(CALC) Joint Value at C:");disp(q_now);
 
     %c)
     %% Path C -> A
@@ -171,10 +174,12 @@ while(1)
         q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end);
         Robot.animate([q_now 0]);
     end
-    fprintf("(CALC) Joint Value at A:");disp(q_now);
+%     fprintf("(CALC) Joint Value at A:");disp(q_now);
 end
 
 
+%%======== Alinea d) ========
+disp("==== Alinea d) ====")
 
 
 function q=sloppy_ik(T0EE)

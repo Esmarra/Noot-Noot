@@ -89,7 +89,7 @@ for t = time_a : interval : time_i % #### Transformar em FUNCAO! ####
     q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end);
     hold on;
 	if(t==time_a)Robot.plot([q_now 0]);end % Clean trace
-    Robot.animate([q_now 0]);
+	Robot.animate([q_now 0]);
 end
 
 fprintf("(CALC) Joint Value at I:");disp(q_now);
@@ -121,7 +121,7 @@ for t = time_b : interval : time_a
     v_start = vel_b;
     v_end = vel_a;
     % Current Joint Var values
-    q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end);
+	q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end);
 	Robot.animate([q_now 0]);
 end
 fprintf("(CALC) Joint Value at A:");disp(q_now);
