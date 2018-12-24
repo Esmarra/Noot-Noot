@@ -1,4 +1,5 @@
 %% Polynomial^3 Function
+
 function q_now = poly3(t,ti,tf,q_start,q_end,v_start,v_end)
     [l,~]=size(q_start); %get size
     Dt = tf-ti; %delta time

@@ -77,6 +77,7 @@ fprintf("Joint Velocity at I:");disp(vel_i);
 fprintf("Joint Velocity at B:");disp(vel_b);
 
 %% Path A -> I
+Robot.plot([qa' 0]) % Clean trace
 for t = time_a : interval : time_i % #### Transformar em FUNCAO! ####
     % Poly Inputs (Easy copy paste for more paths)
     time_start = time_a;
@@ -88,7 +89,6 @@ for t = time_a : interval : time_i % #### Transformar em FUNCAO! ####
     % Current Joint Var values
     q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end);
     hold on;
-	if(t==time_a)Robot.plot([q_now 0]);end % Clean trace
 	Robot.animate([q_now 0]);
 end
 

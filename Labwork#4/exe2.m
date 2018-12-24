@@ -20,37 +20,38 @@ L3=Link('d'    ,  l , 'a', 0  , 'alpha', 0  , 'offset',   0  ,'qlim' ,[0 50]);
 Robot=SerialLink([L1 L2 L3], 'name', 'BoT 2');
 Robot.plotopt = {'floorlevel', 2,'trail',{'m', 'LineWidth', 2}};
 Robot.teach(deg2rad([-45 -45 0]))
+[n,~]=size(DH);
 
-T0_EE=FK_MGD_DH(DH)
-% Post Calculation (Values from ik)
-T0_EE_A=eval(subs(T0_EE,[t1 t2],[-0.7854 -0.7854]));
-T0_EE_B=eval(subs(T0_EE,[t1 t2],[0 0.7854]));
-T0_EE_C=eval(subs(T0_EE,[t1 t2],[1.5708 0.7854]));
+% Obtain Forward Kinematics
+T0_EE=FK_MGD_DH2(DH,n)
 
 % Given positions @ A/B/C
 pa=[(1+sqrt(2))/2,(-1+sqrt(2))/2,(sqrt(2))/2];
 pb=[(sqrt(2))/2,1,(-sqrt(2))/2];
 pc=[-1,(sqrt(2))/2,(-sqrt(2))/2];
 
-T0A=T0_EE_A;
-T0B=T0_EE_B;
-T0C=T0_EE_C;
-T0A(1:3,4)=pa;
-T0B(1:3,4)=pb;
-T0C(1:3,4)=pc;
-% Disp Robot at Points
-hold on;
-trplot(T0A,'frame', 'A','color','r');
-trplot(T0B,'frame', 'B','color','b');
-trplot(T0C,'frame', 'C','color','k');
-
-% Variaveis de Juntas
-qa=sloppy_ik(T0A)';
-qb=sloppy_ik(T0B)';
-qc=sloppy_ik(T0C)';
+% Cacl Joint Variables
+qa=sloppy_ik(pa)';
+qb=sloppy_ik(pb)';
+qc=sloppy_ik(pc)';
+disp("======== Alinea a) ========")
+fprintf("==== Joint Variables ====\n");
 fprintf("Joint Value at A: ");fprintf("%f ",qa');fprintf("| DEG: ");disp(rad2deg(qa'));
-fprintf("Joint Value at B:");disp(qb');%fprintf("| DEG: ");disp(rad2deg(qb'));
-fprintf("Joint Value at C:");disp(qc');%fprintf("| DEG: ");disp(rad2deg(qc'));
+fprintf("Joint Value at B: ");fprintf("%f ",qb');fprintf("| DEG: ");disp(rad2deg(qb'));
+fprintf("Joint Value at C: ");fprintf("%f ",qc');fprintf("| DEG: ");disp(rad2deg(qc'));
+
+% Get Transformation Matrix for Given Points A/B/C
+T0_A=eval(subs(T0_EE,[t1 t2],qa'));
+T0_B=eval(subs(T0_EE,[t1 t2],qb'));
+T0_C=eval(subs(T0_EE,[t1 t2],qc'));
+
+% Disp Robot Frame for Given Points A/B/C
+hold on;
+trplot(T0_A,'frame', 'A','color','r');
+trplot(T0_B,'frame', 'B','color','b');
+trplot(T0_C,'frame', 'C','color','k');
+
+
 % Merge to Matriz (pointsXjoints)
 q_mat=[qa';qb';qc'];
 
@@ -67,6 +68,8 @@ v_qmat = velocidades(q_mat, t_vec);
 vel_a=v_qmat(1,:);
 vel_b=v_qmat(2,:);
 vel_c=v_qmat(3,:);
+disp("======== Alinea b) ========")
+fprintf("==== Joint Velocitys ====\n");
 fprintf("Joint Velocity at A:");disp(vel_a);
 fprintf("Joint Velocity at B:");disp(vel_b);
 fprintf("Joint Velocity at C:");disp(vel_c);
@@ -84,7 +87,7 @@ for t = time_a : interval : time_b % #### Transformar em FUNCAO! ####
     q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end);
 	Robot.animate([q_now 0]);
 end
-fprintf("(CALC) Joint Value at B:");disp(q_now);
+%fprintf("(CALC) Joint Value at B:");disp(q_now);
 
 %% Path B -> C
 for t = time_b : interval : time_c
@@ -99,19 +102,17 @@ for t = time_b : interval : time_c
     q_now=poly3(t,time_start,time_end,q_start,q_end,v_start,v_end);
 	Robot.animate([q_now 0]);
 end
-fprintf("(CALC) Joint Value at C:");disp(q_now);
-
-pause(1)
+%fprintf("(CALC) Joint Value at C:");disp(q_now);
 
 
-%%======== Alinea c) ========
-disp("==== Alinea c) ====")
+
+pause(1.5)
+%% ======== Alinea c) ========
+disp("======== Alinea c) ========")
 Robot.plot([qa' 0]);
-count=0;
-while(1)
-    if(count==7)count=0;end
-    count=count+1;
-%     disp(count)
+fprintf("End in cycle:")
+for count = 1 : 1 : 7
+	fprintf(" %d |",7-count)
     % NEW TIME Vector 1Xpoints
     t_vec = [ 0 4 10 12 16 22 24 28 34 ];
     
@@ -178,27 +179,55 @@ while(1)
 end
 
 
-%%======== Alinea d) ========
-disp("==== Alinea d) ====")
 
+pause(1.5)
+%% ======== Alinea d) ========
+fprintf("\n\n")
+disp("======== Alinea d) ========")
+% tb1 -> troço acelera(+) A até B-
+% tb2 -> troço desacelera(-) até B
+% tb3 -> troço acelera(+) até C- 
+% tb4 -> troço desacelera(-) até C
 
-function q=sloppy_ik(T0EE)
+% Merge to Matriz (pointsXjoints)
+q_mat=[qa';qb';qc'];
+
+% Time Restriction (Passes Point @ t)
+time_a = 0;
+time_b = 4;
+time_c = 10;
+% Merge to Vector 1Xpoints
+t_vec = [ time_a time_b time_c];
+
+% Calculate All joint velocitys for at Points
+acc_max=deg2rad(60);
+v_qmat = velocidades_acc(acc_max,q_mat, t_vec);
+
+vel_a=v_qmat(1,:);
+vel_b=v_qmat(2,:);
+vel_c=v_qmat(3,:);
+fprintf("==== Joint Velocitys ====\n");
+fprintf("Joint Velocity at A:");disp(vel_a);
+fprintf("Joint Velocity at B:");disp(vel_b);
+fprintf("Joint Velocity at C:");disp(vel_c);
+
+function q=sloppy_ik(p)
     L=1;
 
     % get t
-    tx = T0EE(1,4); 
-	ty = T0EE(2,4); 
-	tz = T0EE(3,4);
+    tx = p(1); 
+	ty = p(2); 
+	tz = p(3);
     
     %Formula quadro teta2
-    %teta2=atan((-tz)/((tx^2)+(ty^2)-1));
-    %teta1=atan(ty-tx) - atan2(1,cos(teta2));
+    %t2=atan((-tz)/((tx^2)+(ty^2)-L));
+    %t1=atan(ty-tx) - atan2(L,cos(t2));
     
-    t2 = atan2( -tz, sqrt(tx^2 + ty^2 - 1));
-    t1 = atan2(ty, tx) - atan2(1, cos(t2));
+    t2 = atan2( -tz, sqrt(tx^2 + ty^2 - L));
+    t1 = atan2(ty, tx) - atan2(L, cos(t2));
     
     %t2=-asin((- tx^2 - ty^2 + 2)^(1/2)) % WRONG -.-
-    %t1=atan2(ty,sqrt(1+(cos(t2)^2)-(ty^2)))-atan2(1,cos(t2)); % WRONG -.-
+    %t1=atan2(ty,sqrt(L+(cos(t2)^2)-(ty^2)))-atan2(L,cos(t2)); % WRONG -.-
     
     q=[t1,t2];
 end

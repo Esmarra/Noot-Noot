@@ -1,10 +1,5 @@
 %% Calcula Vel Juntas dado Matriz q em todos os Pontos e Vector tempo
-
-% T0A =[0         0    1.0000    1.2071
-%          0    1.0000         0    0.2071
-%    -1.0000         0         0    0.7071
-%          0         0         0    1.0000];
-         
+       
 function vel_q = velocidades(q_mat, t_vec)
     % Pre alocate
     [l,c]=size(q_mat);
